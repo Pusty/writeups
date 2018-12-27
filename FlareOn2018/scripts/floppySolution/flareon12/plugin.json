@@ -1,0 +1,13 @@
+{
+    "plugin": {
+        "name": "Flare-On Challenge 12",
+        "type": ["architecture", "binaryview"],
+        "api": "python2",
+        "description": "Flare-On Challenge 12",
+        "license": {
+            "name": "BSD-0-clause"
+        },
+        "version": "1.0",
+        "author": "Pusty"
+    }
+}

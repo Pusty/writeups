@@ -1,0 +1,1 @@
+"C:\Program Files (x86)\DOSBox-0.74\DOSBoxDebug.exe" -conf dos.conf -noconsole --enable-debug=heavy

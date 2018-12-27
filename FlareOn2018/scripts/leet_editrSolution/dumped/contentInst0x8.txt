@@ -1,0 +1,17 @@
+push ebp
+mov ebp, esp
+mov edx, [ebp+0x8]
+xor eax, eax
+mov cl, [edx]
+test cl, cl
+jz 0x000D0021
+nop
+ror eax, 0xD
+lea edx, [edx+0x1]
+movzx ecx, cl
+add eax, ecx
+mov cl, [edx]
+test cl, cl
+jnz 0x000D0010
+pop ebp
+ret
