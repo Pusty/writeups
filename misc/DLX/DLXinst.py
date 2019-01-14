@@ -2,18 +2,14 @@
     This a very minimalistic DLX implementation meant for testing and executing its assembly.
     I'm no trying to be follow any existing Opcode/Function standart as there are a few and all basically abitrary.
     My implementation doesn't try to emulate the Pipelining and internal states either.
-
-    As a debugging messuremeant I both provide the "not real" instructions HALT and DEBUG #immediate as well
-        HALT      - Stop the program immediatly
-        DEBUG imm - Used as breakpoints, immediate value used for identification
                     
-    Jumping to address 0xFFFF exits the program as well
+    Jumping to address 0xFFFFFFFF or executing TRAP #0 exits the program by default
     Trap will continue execution at the address contained at TrapValue*4
     Code,Data and Memory shares the same place in my implementation and is both fully readable and writeable and also zeroed out by default
-    Floating Point Instructions work but are not formally correctly implemented, expecially notable for working with double values and me not implementing their affect on multiple floating point registers
-    
+
     Code execution starts at address 0x8000
 """
+
 
 # Encoding Formats
 ENCODING_R = 0
@@ -156,10 +152,6 @@ Instructions = {
     "SW":      InstructionFormat(0x3B,0x00,ENCODING_I,PAR_AR,"SW"),
     "SF":      InstructionFormat(0x3E,0x00,ENCODING_I,PAR_AF,"SF"),
     "SD":      InstructionFormat(0x3F,0x00,ENCODING_I,PAR_AD,"SD"),
-    
-    # Special Opcodes meant for testing and debugging - not in normal DLX listings
-    "DEBUG":   InstructionFormat(0x30,0x00,ENCODING_J,PAR_I,"DEBUG"),
-    "HALT":    InstructionFormat(0x31,0x00,ENCODING_J,PAR_EMPT,"HALT")
 }
 
 # Instructions by opcode function combination

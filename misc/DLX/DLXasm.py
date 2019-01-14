@@ -2,16 +2,11 @@
     This a very minimalistic DLX implementation meant for testing and executing its assembly.
     I'm no trying to be follow any existing Opcode/Function standart as there are a few and all basically abitrary.
     My implementation doesn't try to emulate the Pipelining and internal states either.
-
-    As a debugging messuremeant I both provide the "not real" instructions HALT and DEBUG #immediate as well
-        HALT      - Stop the program immediatly
-        DEBUG imm - Used as breakpoints, immediate value used for identification
                     
-    Jumping to address 0xFFFF exits the program as well
+    Jumping to address 0xFFFFFFFF or executing TRAP #0 exits the program by default
     Trap will continue execution at the address contained at TrapValue*4
     Code,Data and Memory shares the same place in my implementation and is both fully readable and writeable and also zeroed out by default
-    Floating Point Instructions work but are not formally correctly implemented, expecially notable for working with double values and me not implementing their affect on multiple floating point registers
-    
+
     Code execution starts at address 0x8000
 """
 
@@ -105,8 +100,8 @@ def encode(context, parType, pars, line, lineNr):
             return False
 
         value = ((function&0x3ff)<<21)|((Xd&0x1f)<<16)|((Xc&0x1f)<<11)|((Xs&0x1f)<<6)|(opvalue&0x3f)
-        context.code += struct.pack("<I", value)
-        context.lineNr += struct.pack("<I", lineNr)
+        context.code += struct.pack(">I", value)
+        context.lineNr += struct.pack(">I", lineNr)
         return True
     elif inst.encodingScheme == ENCODING_I:
         opvalue = inst.opcode
@@ -183,8 +178,8 @@ def encode(context, parType, pars, line, lineNr):
             return False
         
         value = ((imm&0xFFFF)<<16)|((Xd&0x1f)<<11)|((Xs&0x1f)<<6)|(opvalue&0x3f)
-        context.code += struct.pack("<I", value)
-        context.lineNr += struct.pack("<I", lineNr)
+        context.code += struct.pack(">I", value)
+        context.lineNr += struct.pack(">I", lineNr)
         return True
     elif inst.encodingScheme == ENCODING_J:
         opvalue = inst.opcode
@@ -208,8 +203,8 @@ def encode(context, parType, pars, line, lineNr):
             return False
         
         value = ((dest&0x3ffffff)<<6)|(opvalue&0x3f)
-        context.code += struct.pack("<I", value)
-        context.lineNr += struct.pack("<I", lineNr)
+        context.code += struct.pack(">I", value)
+        context.lineNr += struct.pack(">I", lineNr)
         return True
         
     raise RuntimeError("Invalid Inpuut @ ["+str(lineNr)+"] '"+line+"'")
@@ -224,11 +219,12 @@ def convertLabel(context, text, label):
         if line == None: continue
         line = line.strip()
         if len(line.strip()) == 0:  continue
-        if line[0] == ";": continue
-        obj = re.match(r"^ *([A-Z_.$][A-Z0-9_.$]*): *([^;]+)?(?:;.*)?$",line,re.IGNORECASE)
+        if line[0] == ";" or line[0] == "/": continue
+        line = re.split(";|/", line)[0]
+        obj = re.match(r"^ *([A-Z_.$][A-Z0-9_.$]*): *(.+)?$",line,re.IGNORECASE)
         if obj != None:
             if(obj.group(1) == label): break
-            if(len(obj.groups()) == 2):
+            if(len(obj.groups()) == 2) and obj.group(2) != None:
                 index += incValue
         else:
             index += incValue
@@ -239,20 +235,22 @@ def parseToContext(context, line, text, lineNr):
     line = line.strip()
     if len(line.strip()) == 0:
         return
-    if line[0] == ";":
+    if line[0] == ";" or line[0] == "/":
         return
-        
+     
+    line = re.split(";|/", line)[0]
+
     # NORMAL DLX ENCODINGS
 
     # PAR_EMPT | OP
-    obj = re.match("^ *([A-Z]+) *(?:;.*)?$",line,re.IGNORECASE)
+    obj = re.match("^ *([A-Z0-9]+) *$",line,re.IGNORECASE)
     if obj != None:
         encode(context, PAR_EMPT, [obj.group(1)], line, lineNr)
         return
         
     # PAR_1RS  | OP Rs
     # PAR_1RD  | OP Rd
-    obj = re.match("^ *([A-Z]+) +R([0-9]+) *(?:;.*)?$",line,re.IGNORECASE)
+    obj = re.match("^ *([A-Z0-9]+) +R([0-9]+) *$",line,re.IGNORECASE)
     if obj != None:
         try:
             encode(context, PAR_1RD, [obj.group(1), int(obj.group(2),10)], line, lineNr)
@@ -261,50 +259,50 @@ def parseToContext(context, line, text, lineNr):
         return
         
     # PAR_RDES | OP Rs, Dest
-    obj = re.match(r"^ *([A-Z]+) +R([0-9]+) *, *([A-Z_.$][0-9A-Z_.$]*) *(?:;.*)?$",line,re.IGNORECASE)
+    obj = re.match(r"^ *([A-Z0-9]+) +R([0-9]+) *, *([A-Z_.$][0-9A-Z_.$]*) *$",line,re.IGNORECASE)
     if obj != None:
         encode(context, PAR_RDES, [obj.group(1),int(obj.group(2),10),convertLabel(context, text,obj.group(3))-len(context.code)], line, lineNr)
         return
         
     # PAR_RA   | OP Rd, Addr
-    obj = re.match(r"^ *([A-Z]+) +R([0-9]+) *, *(-?[0-9]+)\(R([0-9]+)\) *(?:;.*)?$",line,re.IGNORECASE)
+    obj = re.match(r"^ *([A-Z0-9]+) +R([0-9]+) *, *(-?[0-9]+)\(R([0-9]+)\) *$",line,re.IGNORECASE)
     if obj != None:
         encode(context, PAR_RA, [obj.group(1),int(obj.group(2)),(int(obj.group(3),10), int(obj.group(4)))], line, lineNr)
         return
         
     # PAR_FA   | OP Fd, Addr
-    obj = re.match(r"^ *([A-Z]+) +F([0-9]+) *, *(-?[0-9]+)\(R([0-9]+)\) *(?:;.*)?$",line,re.IGNORECASE)
+    obj = re.match(r"^ *([A-Z0-9]+) +F([0-9]+) *, *(-?[0-9]+)\(R([0-9]+)\) *$",line,re.IGNORECASE)
     if obj != None:
         encode(context, PAR_FA, [obj.group(1),int(obj.group(2)),(int(obj.group(3),10), int(obj.group(4)))], line, lineNr)
         return
         
     # PAR_DA   | OP Dd, Addr
-    obj = re.match(r"^ *([A-Z]+) +D([0-9]+) *, *(-?[0-9]+)\(R([0-9]+)\) *(?:;.*)?$",line,re.IGNORECASE)
+    obj = re.match(r"^ *([A-Z0-9]+) +D([0-9]+) *, *(-?[0-9]+)\(R([0-9]+)\) *$",line,re.IGNORECASE)
     if obj != None:
         encode(context, PAR_DA, [obj.group(1),int(obj.group(2)),(int(obj.group(3),10), int(obj.group(4)))], line, lineNr)
         return
         
     # PAR_AR   | OP Addr, Rs
-    obj = re.match(r"^ *([A-Z]+) +(-?[0-9]+)\(R([0-9]+)\) *, *R([0-9]+) *(?:;.*)?$",line,re.IGNORECASE)
+    obj = re.match(r"^ *([A-Z0-9]+) +(-?[0-9]+)\(R([0-9]+)\) *, *R([0-9]+) *$",line,re.IGNORECASE)
     if obj != None:
         encode(context, PAR_AR, [obj.group(1), int(obj.group(4)),(int(obj.group(2),10), int(obj.group(3)))], line, lineNr)
         return
         
     # PAR_AF   | OP Addr, Fs
-    obj = re.match(r"^ *([A-Z]+) +(-?[0-9]+)\(R([0-9]+)\) *, *F([0-9]+) *(?:;.*)?$",line,re.IGNORECASE)
+    obj = re.match(r"^ *([A-Z0-9]+) +(-?[0-9]+)\(R([0-9]+)\) *, *F([0-9]+) *$",line,re.IGNORECASE)
     if obj != None:
         encode(context, PAR_AF, [obj.group(1), int(obj.group(4)), (int(obj.group(2),10), int(obj.group(3)))], line, lineNr)
         return
         
     # PAR_AD   | OP Addr, Ds
-    obj = re.match(r"^ *([A-Z]+) +(-?[0-9]+)\(R([0-9]+)\) *, *D([0-9]+) *(?:;.*)?$",line,re.IGNORECASE)
+    obj = re.match(r"^ *([A-Z0-9]+) +(-?[0-9]+)\(R([0-9]+)\) *, *D([0-9]+) *$",line,re.IGNORECASE)
     if obj != None:
         encode(context, PAR_AD, [obj.group(1), int(obj.group(4)), (int(obj.group(2),10), int(obj.group(3)))], line, lineNr)
         return
        
     # PAR_2FC  | OP Fs, Fc       
     # PAR_2F   | OP Fd, Fs
-    obj = re.match(r"^ *([A-Z]+) +F([0-9]+) *, *F([0-9]+) *(?:;.*)?$",line,re.IGNORECASE)
+    obj = re.match(r"^ *([A-Z0-9]+) +F([0-9]+) *, *F([0-9]+) *$",line,re.IGNORECASE)
     if obj != None:
         try:
             encode(context, PAR_2F, [obj.group(1),int(obj.group(2)), int(obj.group(3))], line, lineNr)
@@ -314,7 +312,7 @@ def parseToContext(context, line, text, lineNr):
     
     # PAR_2DC  | OP Ds, Dc
     # PAR_2D   | OP Dd, Ds
-    obj = re.match(r"^ *([A-Z]+) +D([0-9]+) *, *D([0-9]+) *(?:;.*)?$",line,re.IGNORECASE)
+    obj = re.match(r"^ *([A-Z0-9]+) +D([0-9]+) *, *D([0-9]+) *$",line,re.IGNORECASE)
     if obj != None:
         try:
             encode(context, PAR_2D, [obj.group(1), int(obj.group(2)), int(obj.group(3))], line, lineNr)
@@ -323,88 +321,88 @@ def parseToContext(context, line, text, lineNr):
         return
         
     # PAR_RF   | OP Rd, Fs
-    obj = re.match(r"^ *([A-Z]+) +R([0-9]+) *, *F([0-9]+) *(?:;.*)?$",line,re.IGNORECASE)
+    obj = re.match(r"^ *([A-Z0-9]+) +R([0-9]+) *, *F([0-9]+) *$",line,re.IGNORECASE)
     if obj != None:
         encode(context, PAR_RF, [obj.group(1),int(obj.group(2)), int(obj.group(3))], line, lineNr)
         return
         
     # PAR_FR   | OP Fd, Rs 
-    obj = re.match(r"^ *([A-Z]+) +F([0-9]+) *, *R([0-9]+) *(?:;.*)?$",line,re.IGNORECASE)
+    obj = re.match(r"^ *([A-Z0-9]+) +F([0-9]+) *, *R([0-9]+) *$",line,re.IGNORECASE)
     if obj != None:
         encode(context, PAR_FR, [obj.group(1),int(obj.group(2)),int(obj.group(3))], line, lineNr)
         return
         
     # PAR_DF   | OP Dd, Fs
-    obj = re.match(r"^ *([A-Z]+) +D([0-9]+) *, *F([0-9]+) *(?:;.*)?$",line,re.IGNORECASE)
+    obj = re.match(r"^ *([A-Z0-9]+) +D([0-9]+) *, *F([0-9]+) *$",line,re.IGNORECASE)
     if obj != None:
         encode(context, PAR_DF, [obj.group(1),int(obj.group(2)),int(obj.group(3))], line, lineNr)
         return
         
     # PAR_FD   | OP Fd, Ds
-    obj = re.match(r"^ *([A-Z]+) +F([0-9]+) *, *D([0-9]+) *(?:;.*)?$",line,re.IGNORECASE)
+    obj = re.match(r"^ *([A-Z0-9]+) +F([0-9]+) *, *D([0-9]+) *$",line,re.IGNORECASE)
     if obj != None:
         encode(context, PAR_FD, [obj.group(1),int(obj.group(2)),int(obj.group(3))], line, lineNr)
         return
         
     # PAR_RD   | OP Rd, Ds
-    obj = re.match(r"^ *([A-Z]+) +R([0-9]+) *, *D([0-9]+) *(?:;.*)?$",line,re.IGNORECASE)
+    obj = re.match(r"^ *([A-Z0-9]+) +R([0-9]+) *, *D([0-9]+) *$",line,re.IGNORECASE)
     if obj != None:
         encode(context, PAR_RD, [obj.group(1),int(obj.group(2)),int(obj.group(3))], line, lineNr)
         return
         
     # PAR_DR   | OP Dd, Rs
-    obj = re.match(r"^ *([A-Z]+) +D([0-9]+) *, *R([0-9]+) *(?:;.*)?$",line,re.IGNORECASE)
+    obj = re.match(r"^ *([A-Z0-9]+) +D([0-9]+) *, *R([0-9]+) *$",line,re.IGNORECASE)
     if obj != None:
         encode(context, PAR_DR, [obj.group(1),int(obj.group(2)),int(obj.group(3))], line, lineNr)
         return  
         
     # PAR_I    | OP Imm
-    obj = re.match(r"^ *([A-Z]+) +#(-?[0-9]+) *(?:;.*)?$",line,re.IGNORECASE)
+    obj = re.match(r"^ *([A-Z0-9]+) +#(-?[0-9]+) *$",line,re.IGNORECASE)
     if obj != None:
         encode(context, PAR_I, [obj.group(1),int(obj.group(2),10)], line, lineNr)
         return
         
     # PAR_RID  | OP Rd, Imm
-    obj = re.match(r"^ *([A-Z]+) +R([0-9]+) *, *#(-?[0-9]+) *(?:;.*)?$",line,re.IGNORECASE)
+    obj = re.match(r"^ *([A-Z0-9]+) +R([0-9]+) *, *#(-?[0-9]+) *$",line,re.IGNORECASE)
     if obj != None:
         encode(context, PAR_RID, [obj.group(1),int(obj.group(2)),int(obj.group(3),10)], line, lineNr)
         return
         
     # PAR_2RI  | OP Rd,Rs,Imm
-    obj = re.match(r"^ *([A-Z]+) +R([0-9]+) *, *R([0-9]+) *, *#(-?[0-9]+) *(?:;.*)?$",line,re.IGNORECASE)
+    obj = re.match(r"^ *([A-Z0-9]+) +R([0-9]+) *, *R([0-9]+) *, *#(-?[0-9]+) *$",line,re.IGNORECASE)
     if obj != None:
         encode(context, PAR_2RI, [obj.group(1),int(obj.group(2)),int(obj.group(3)),int(obj.group(4),10)], line, lineNr)
         return
         
     # PAR_3R   | OP Rd,Rs,Rc
     # PAR_3D   | OP Dd,Ds,Dc
-    obj = re.match(r"^ *([A-Z]+) +R([0-9]+) *, *R([0-9]+) *, *R([0-9]+) *(?:;.*)?$",line,re.IGNORECASE)
+    obj = re.match(r"^ *([A-Z0-9]+) +R([0-9]+) *, *R([0-9]+) *, *R([0-9]+) *$",line,re.IGNORECASE)
     if obj != None:
         encode(context, PAR_3R, [obj.group(1),int(obj.group(2)),int(obj.group(3)),int(obj.group(4))], line, lineNr)
         return
         
     # PAR_3F   | OP Fd,Fs,Fc
-    obj = re.match(r"^ *([A-Z]+) +F([0-9]+) *, *F([0-9]+) *, *F([0-9]+) *(?:;.*)?$",line,re.IGNORECASE)
+    obj = re.match(r"^ *([A-Z0-9]+) +F([0-9]+) *, *F([0-9]+) *, *F([0-9]+) *$",line,re.IGNORECASE)
     if obj != None:
         encode(context, PAR_3F, [obj.group(1),int(obj.group(2)),int(obj.group(3)),int(obj.group(4))], line, lineNr)
         return
         
     # PAR_3D   | OP Dd,Ds,Dc
-    obj = re.match(r"^ *([A-Z]+) +D([0-9]+) *, *D([0-9]+) *, *D([0-9]+) *(?:;.*)?$",line,re.IGNORECASE)
+    obj = re.match(r"^ *([A-Z0-9]+) +D([0-9]+) *, *D([0-9]+) *, *D([0-9]+) *$",line,re.IGNORECASE)
     if obj != None:
         encode(context, PAR_3D, [obj.group(1),int(obj.group(2)),int(obj.group(3)),int(obj.group(4))], line, lineNr)
         return
        
     # PAR_DEST | OP Dest
-    obj = re.match("^ *([A-Z]+) +([A-Z_.$][0-9A-Z_.$]*) *(?:;.*)?$",line,re.IGNORECASE)
+    obj = re.match("^ *([A-Z0-9]+) +([A-Z_.$][0-9A-Z_.$]*) *$",line,re.IGNORECASE)
     if obj != None:
         encode(context, PAR_DEST, [obj.group(1),convertLabel(context,text,obj.group(2))-len(context.code)], line, lineNr)
         return
  
     #LABEL:
-    obj = re.match(r"^ *([A-Z_.$][A-Z0-9_.$]*):? *([^;]+)?(?:;.*)?$",line,re.IGNORECASE)
+    obj = re.match(r"^ *([A-Z_.$][A-Z0-9_.$]*):? *(.+)?$",line,re.IGNORECASE)
     if obj != None:
-        if(len(obj.groups()) == 2):
+        if(len(obj.groups()) == 2 and obj.group(2) != None):
             parseToContext(context,obj.group(2), text, lineNr)
         return
         

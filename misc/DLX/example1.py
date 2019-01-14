@@ -24,7 +24,7 @@ example = """
         LW   R2, 104(R0)    ; 08 Read the second parameter
         JAL  GCD            ; 0C Call subprogramm
         SW   108(R0), R1    ; 10 Save result
-        HALT                ; 14 Halt Emulator
+        TRAP #0             ; 14 Halt Emulator
         
 GCD:    SW   0(R4), R31     ; 18 Push return value onto the stack
         ADDI R4, R4, #4     ; 1C Increase stack pointer

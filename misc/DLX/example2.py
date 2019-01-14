@@ -23,7 +23,7 @@ example = """
            XOR   R3, R3, R3     ; 08 Initialize k to 0
            JAL   Factorial      ; 0C Call the factorial calculation sub program
            SW    2000(R0), R4   ; 10 Write result into result memory position
-           HALT                 ; 14 Stop the emulator
+           TRAP #0              ; 14 Stop the emulator
         
 Factorial: SW    0(R2), R1      ; 18 Save R1 onto the stack
            SW    4(R2), R3      ; 1C Save R3 onto the stack

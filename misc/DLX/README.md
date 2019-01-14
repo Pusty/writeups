@@ -101,7 +101,7 @@
 | 0C     |     X    | ANDI     | Rd,Rs,Imm  |     I    | Rd = Rs & Imm                  | Bitwise And immediate                                               |
 | 0D     |     X    | ORI      | Rd,Rs,Imm  |     I    | Rd = Rs | Imm                  | Bitwise Or Imm                                                      |
 | 0E     |     X    | XORI     | Rd,Rs,Imm  |     I    | Rd = Rs ^ Imm                  | Bitwise Exclusive Or immediate                                      |
-| 0F     |     X    | LHI/LHGI | Rd, Imm    |     I    | Rd = E(Imm) << 16              | Load High Immediate; Zero lower half                                |
+| 0F     |     X    | LHI      | Rd, Imm    |     I    | Rd = E(Imm) << 16              | Load High Immediate; Zero lower half                                |
 | 10     |     X    | RFE      |            |     J    | Recover from Saved State       | Return from exception / Return from Trap                            |
 | 11     |     X    | TRAP     | Imm        |     J    | Save State; Syscall Imm        | Trap/Syscall; Wait until pipeline is cleared before called          |
 | 12     |     X    | JR       | Rs         |     I    | PC = Rs                        | Jump Register                                                       |
