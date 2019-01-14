@@ -6,16 +6,16 @@
 - PC contains the address of the next instruction to execute
 - 32 32bit Integer Registers
 - R0..R31
-- everything from R1 to R30 can be arbitrary used
+- everything from R1 to R31 can be arbitrary used
 - Load-Store architecture
 - Register-Register architecture
 - R0 is fixed to the value 0 and can only be read from
-- R31 contains the return address on subroutine calls
+- R31 contains the return address of subroutine calls
 - 32 32bit Floating Point Registers
-- there are 32 Single Precision Floating Point Registers from F0 to F31 can be arbitrary used
-- for simplification there are Double Precision Floating Point Registers D0 to D15 which are in fact just two Single Precision Floating Point Register
-- Floating Point Status Register (FPRS) for holding the result of Floating Point comparisons
-- Memory is formated in big-endian format and references to it are assumed to be aligned to the respective read/write size
+- there are 32 Single Precision Floating Point Registers from F0 to F31 which can be arbitrary used
+- for simplification there are Double Precision Floating Point Registers D0 to D15 which are in fact just two sequential Single Precision Floating Point Register
+- Floating Point Status Register (FPSR) for holding the result of Floating Point comparisons
+- Memory is in big-endian format and references to it are assumed to be aligned to the respective read/write size
 
 
 ## Instructions
