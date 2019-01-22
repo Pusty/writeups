@@ -9,7 +9,7 @@ beginner_reverse is a 64bit Linux binary that reads a line of user input and eit
 
 Following the execution flow of the binary and the content of the entered line of text reveals the following part of the code:
 
-![](/beginner_reverse.PNG)
+![](beginner_reverse.PNG)
 
     r15 contains the address to an array of constant data
     r14 contains the address of an array where each character of the entered text has its own dword
