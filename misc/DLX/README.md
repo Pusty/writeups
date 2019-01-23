@@ -44,7 +44,7 @@
 | 00     | 22       | SUB      | Rd,Rs,Rc   |     R    | Rd = Rs - Rc                   | Subtract signed                                                     |
 | 00     | 23       | SUBU     | Rd,Rs,Rc   |     R    | Rd = Rs - Rc                   | Subtract unsigned                                                   |
 | 00     | 24       | AND      | Rd,Rs,Rc   |     R    | Rd = Rs & Rc                   | Bitwise And Registers                                               |
-| 00     | 25       | OR       | Rd,Rs,Rc   |     R    | Rd = Rs | Rc                   | Bitwise Or Registers                                                |
+| 00     | 25       | OR       | Rd,Rs,Rc   |     R    | Rd = Rs \| Rc                   | Bitwise Or Registers                                                |
 | 00     | 26       | XOR      | Rd,Rs,Rc   |     R    | Rd = Rs ^ Rc                   | Bitwise Exclusive Or Registers                                      |
 | 00     | 28       | SEQ      | Rd,Rs,Rc   |     R    | Rd = (Rs == Rc?1:0)            | Set Equal                                                           |
 | 00     | 29       | SNE      | Rd,Rs,Rc   |     R    | Rd = (Rs != Rc?1:0)            | Set Not Equal                                                       |
@@ -99,7 +99,7 @@
 | 0A     |     X    | SUBI     | Rd,Rs,Imm  |     I    | Rd = Rs - E(Imm)               | Subtract immediate; Imm is signed                                   |
 | 0B     |     X    | SUBUI    | Rd,Rs,Imm  |     I    | Rd = Rs - U(Imm)               | Subtract immediate; Imm is unsigned                                 |
 | 0C     |     X    | ANDI     | Rd,Rs,Imm  |     I    | Rd = Rs & Imm                  | Bitwise And immediate                                               |
-| 0D     |     X    | ORI      | Rd,Rs,Imm  |     I    | Rd = Rs | Imm                  | Bitwise Or Imm                                                      |
+| 0D     |     X    | ORI      | Rd,Rs,Imm  |     I    | Rd = Rs \| Imm                  | Bitwise Or Imm                                                      |
 | 0E     |     X    | XORI     | Rd,Rs,Imm  |     I    | Rd = Rs ^ Imm                  | Bitwise Exclusive Or immediate                                      |
 | 0F     |     X    | LHI      | Rd, Imm    |     I    | Rd = E(Imm) << 16              | Load High Immediate; Zero lower half                                |
 | 10     |     X    | RFE      |            |     J    | Recover from Saved State       | Return from exception / Return from Trap                            |
@@ -121,7 +121,7 @@
 | 24     |     X    | LBU      | Rd,Addr    |     I    | Rd = U(MEM[Addr]&0xFF)         | Load Byte Unsigned; Load byte will be unsigned                      |
 | 25     |     X    | LHU      | Rd,Addr    |     I    | Rd = U(MEM[Addr]&0xFFFF)       | Load Half Word; Load half word will be unsigned                     |
 | 26     |     X    | LF       | Fd,Addr    |     I    | Fd = MEM[Addr]                 | Load Single Precision Floating Point                                |
-| 27     |     X    | LD       | Dr,Addr    |     I    | Dr = (MEM[Addr]<<32)           | MEM[Addr+4]                                                         |
+| 27     |     X    | LD       | Dr,Addr    |     I    | Dr = (MEM[Addr]<<32)           | Load Double Precision Floating Point                                                    |
 | 28     |     X    | SB       | Addr,Rd    |     I    | byte MEM[Addr]= Rd&0xFF        | Store Byte ; Uses Destination Register as Source                    |
 | 29     |     X    | SH       | Addr,Rd    |     I    | halfword MEM[Addr]= Rd&0xFFFF  | Store Half Word  ; Uses Destination Register as Source              |
 | 3B     |     X    | SW       | Addr,Rd    |     I    | MEM[Addr]= Rd                  | Store Word ; Uses Destination Register as Source                    |
