@@ -34,17 +34,17 @@ class FloatRegister:
     def __init__(self, memory):
         self.memory = memory
     def __setitem__(self, key, data):
-        self.memory[key] = struct.unpack("<I",struct.pack("<f",float(data)))[0]
+        self.memory[key] = struct.unpack(">I",struct.pack(">f",float(data)))[0]
     def __getitem__(self, key):
-        return struct.unpack("<f",struct.pack("<I",self.memory[key]))[0]
+        return struct.unpack(">f",struct.pack(">I",self.memory[key]))[0]
         
 class DoubleRegister:
     def __init__(self, memory):
         self.memory = memory
     def __setitem__(self, key, data):
-        self.memory[key], self.memory[key+1] = struct.unpack("<II",struct.pack("<d",data))
+        self.memory[key], self.memory[key+1] = struct.unpack(">II",struct.pack(">d",data))
     def __getitem__(self, key):
-        return struct.unpack("<d",struct.pack("<II",self.memory[key], self.memory[key+1]))[0]
+        return struct.unpack(">d",struct.pack(">II",self.memory[key], self.memory[key+1]))[0]
 
 class RegisterContext:
     
@@ -73,43 +73,43 @@ class EmulatorContext:
             self.memory[index+i] = data[i]
             
     def writeDouble(self,index, flo):
-        self.writeBytes(index, struct.pack("<d",flo))
+        self.writeBytes(index, struct.pack(">d",flo))
             
     def writeFloat(self,index, flo):
-        self.writeBytes(index, struct.pack("<f",flo))
+        self.writeBytes(index, struct.pack(">f",flo))
             
     def writeWord(self,index, integer):
-        self.writeBytes(index, struct.pack("<I",integer&0xFFFFFFFF))
+        self.writeBytes(index, struct.pack(">I",integer&0xFFFFFFFF))
         
     def writeHalfWord(self,index, integer):
-        self.writeBytes(index, struct.pack("<H",integer&0xFFFF))
+        self.writeBytes(index, struct.pack(">H",integer&0xFFFF))
         
     def writeByte(self,index, integer):
-        self.writeBytes(index, struct.pack("<B",integer&0xFF))
+        self.writeBytes(index, struct.pack(">B",integer&0xFF))
         
     def readDouble(self,index):
-        return struct.unpack("<d",self.memory[index:index+8])[0]
+        return struct.unpack(">d",self.memory[index:index+8])[0]
             
     def readFloat(self,index):
-        return struct.unpack("<f",self.memory[index:index+4])[0]
+        return struct.unpack(">f",self.memory[index:index+4])[0]
             
     def readWord(self,index):
-        return struct.unpack("<I",self.memory[index:index+4])[0]
+        return struct.unpack(">I",self.memory[index:index+4])[0]
         
     def readSignedWord(self,index):
-        return struct.unpack("<i",self.memory[index:index+4])[0]
+        return struct.unpack(">i",self.memory[index:index+4])[0]
         
     def readHalfWord(self,index):
-        return struct.unpack("<H",self.memory[index:index+2])[0]
+        return struct.unpack(">H",self.memory[index:index+2])[0]
         
     def readSignedHalfWord(self,index):
-        return struct.unpack("<h",self.memory[index:index+2])[0]
+        return struct.unpack(">h",self.memory[index:index+2])[0]
         
     def readByte(self,index):
-        return struct.unpack("<B",self.memory[index:index+1])[0]
+        return struct.unpack(">B",self.memory[index:index+1])[0]
         
     def readSignedByte(self,index):
-        return struct.unpack("<b",self.memory[index:index+1])[0]
+        return struct.unpack(">b",self.memory[index:index+1])[0]
     
 def E(value, size, signed=True):
     v = 0
@@ -142,7 +142,7 @@ def emulate(context):
         return False
         
         
-    instValue = struct.unpack("<I",context.memory[context.regs.PC:context.regs.PC+4])[0]
+    instValue = struct.unpack(">I",context.memory[context.regs.PC:context.regs.PC+4])[0]
     
     if instValue == 0:
         print("Hit not mapped memory at "+hex(context.regs.PC))
@@ -359,47 +359,47 @@ def emulate(context):
     elif inst.opcode == Instructions["SGEI"].opcode and inst.functionValue == Instructions["SGEI"].functionValue:
         context.regs.R[Xd] = 1 if context.regs.R[Xs] >= immE else 0
     elif inst.opcode == Instructions["LB"].opcode and inst.functionValue == Instructions["LB"].functionValue:
-        context.regs.R[Xd] = struct.unpack("<b",context.memory[addr:addr+1])[0]
+        context.regs.R[Xd] = struct.unpack(">b",context.memory[addr:addr+1])[0]
     elif inst.opcode == Instructions["LH"].opcode and inst.functionValue == Instructions["LH"].functionValue:
         if addr%2 != 0:
             raise ValueError("Trying to read not aligned half word @ "+hex(addr))
-        context.regs.R[Xd] = struct.unpack("<h",context.memory[addr:addr+2])[0]
+        context.regs.R[Xd] = struct.unpack(">h",context.memory[addr:addr+2])[0]
     elif inst.opcode == Instructions["LW"].opcode and inst.functionValue == Instructions["LW"].functionValue:
         if addr%4 != 0:
             raise ValueError("Trying to read not aligned word @ "+hex(addr))
-        context.regs.R[Xd] = struct.unpack("<I",context.memory[addr:addr+4])[0]
+        context.regs.R[Xd] = struct.unpack(">I",context.memory[addr:addr+4])[0]
     elif inst.opcode == Instructions["LBU"].opcode and inst.functionValue == Instructions["LBU"].functionValue:
-        context.regs.R[Xd] = struct.unpack("<B",context.memory[addr:addr+1])[0]
+        context.regs.R[Xd] = struct.unpack(">B",context.memory[addr:addr+1])[0]
     elif inst.opcode == Instructions["LHU"].opcode and inst.functionValue == Instructions["LHU"].functionValue:
         if addr%2 != 0:
             raise ValueError("Trying to read not aligned half word @ "+hex(addr))
-        context.regs.R[Xd] = struct.unpack("<H",context.memory[addr:addr+2])[0]
+        context.regs.R[Xd] = struct.unpack(">H",context.memory[addr:addr+2])[0]
     elif inst.opcode == Instructions["LF"].opcode and inst.functionValue == Instructions["LF"].functionValue:
         if addr%4 != 0:
             raise ValueError("Trying to read not aligned float @ "+hex(addr))
-        context.regs.F[Xd] = struct.unpack("<f",context.memory[addr:addr+4])[0]
+        context.regs.F[Xd] = struct.unpack(">f",context.memory[addr:addr+4])[0]
     elif inst.opcode == Instructions["LD"].opcode and inst.functionValue == Instructions["LD"].functionValue:
         if addr%8 != 0:
             raise ValueError("Trying to read not aligned double @ "+hex(addr))
-        context.regs.D[Xd] = struct.unpack("<d",context.memory[addr:addr+8])[0]
+        context.regs.D[Xd] = struct.unpack(">d",context.memory[addr:addr+8])[0]
     elif inst.opcode == Instructions["SB"].opcode and inst.functionValue == Instructions["SB"].functionValue:
-        context.writeBytes(addr,struct.pack("<B",context.regs.R[Xd]&0xFF))
+        context.writeBytes(addr,struct.pack(">B",context.regs.R[Xd]&0xFF))
     elif inst.opcode == Instructions["SH"].opcode and inst.functionValue == Instructions["SH"].functionValue:
         if addr%2 != 0:
             raise ValueError("Trying to write not aligned half word @ "+hex(addr))
-        context.writeBytes(addr,struct.pack("<H",context.regs.R[Xd]&0xFFFF))
+        context.writeBytes(addr,struct.pack(">H",context.regs.R[Xd]&0xFFFF))
     elif inst.opcode == Instructions["SW"].opcode and inst.functionValue == Instructions["SW"].functionValue:
         if addr%4 != 0:
             raise ValueError("Trying to write not aligned word @ "+hex(addr))
-        context.writeBytes(addr,struct.pack("<I",context.regs.R[Xd]&0xFFFFFFFF))
+        context.writeBytes(addr,struct.pack(">I",context.regs.R[Xd]&0xFFFFFFFF))
     elif inst.opcode == Instructions["SF"].opcode and inst.functionValue == Instructions["SF"].functionValue:
         if addr%4 != 0:
             raise ValueError("Trying to write not aligned float @ "+hex(addr))
-        context.writeBytes(addr,struct.pack("<f",context.regs.F[Xd]))
+        context.writeBytes(addr,struct.pack(">f",context.regs.F[Xd]))
     elif inst.opcode == Instructions["SD"].opcode and inst.functionValue == Instructions["SD"].functionValue:
         if addr%8 != 0:
             raise ValueError("Trying to write not aligned double @ "+hex(addr))
-        context.writeBytes(addr,struct.pack("<d",context.regs.D[Xd]))
+        context.writeBytes(addr,struct.pack(">d",context.regs.D[Xd]))
 
     context.regs.PC += 4
     return True
