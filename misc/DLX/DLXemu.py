@@ -181,7 +181,7 @@ def emulate(context):
 
     if((context.regs.PC - CODE_START) < len(context.debugLineNr)):
         f = context.regs.PC - CODE_START
-        lineNr = struct.unpack("<I",context.debugLineNr[f:f+4])[0]
+        lineNr = struct.unpack(">I",context.debugLineNr[f:f+4])[0]
         if lineNr < len(context.debugText):
             print(("%04X"%context.regs.PC)+": "+context.debugText[lineNr].split(";")[0].split("/")[0].strip())
     
@@ -331,7 +331,7 @@ def emulate(context):
         context.regs = context.regs.safeState
     elif inst.opcode == Instructions["TRAP"].opcode and inst.functionValue == Instructions["TRAP"].functionValue:
         context.regs.safeState = copy.deepcopy(context.regs)
-        context.regs.PC = struct.unpack("<I",context.memory[imm*4:imm*4+4])[0]
+        context.regs.PC = struct.unpack(">I",context.memory[imm*4:imm*4+4])[0]
         return True
     elif inst.opcode == Instructions["JR"].opcode and inst.functionValue == Instructions["JR"].functionValue:
         context.regs.PC = U(context.regs.R[Xs])
