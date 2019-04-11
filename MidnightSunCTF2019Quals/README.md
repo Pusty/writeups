@@ -8,7 +8,7 @@ hfs-mbr contains a customized DOS image that requests a password to be entered b
 ## Solution
 
 Following what the first sector of the file loads, a jumptable executing code depending on the entered letters appears at file offset 0x65E.
-Most of the addresses associated with letters do nothing, but some letters contain functionality which increases the amount of correct characters if it's called at the correct position in the password string.
+Most of the addresses associated with letters do nothing, but some letters contain functionality which increases the amount of correct characters if they are called at the correct position in the password string.
 
 ![](jumptable.PNG)
 
@@ -32,7 +32,7 @@ Listing them all with the constrains they have to fulfill:
                      sojupwner
 ```
 
-Upon entered in the letters in the correct sequence the DOS system boots
+Upon entering in the letters in the correct sequence, the DOS system boots
 and greets with the first flag `midnight{w0ah_Sh!t_jU5t_g0t_REALmode}`.
 
 # hfs-dos
@@ -44,9 +44,9 @@ hfs-dos consists out of exploiting the COM executable providing a very limited s
     
 ## Solution
 
-Extracting the files from img-file using reveals a COMMAND.COM file which contains the functionality of the restrictive DOS-shell that is accessible after entering the correct boot password.
+Extracting the files from the img-file reveals a COMMAND.COM file which contains the functionality of the restrictive DOS-shell that is accessible after entering the correct boot password.
 
-Within the COMMAND.COM the text-input method contains a bug which reduces the pointer-address for the next character by 1 if backspace is pressed to remove a character but it does not check if there are characters to remove.
+Within the COMMAND.COM the text-input method contains a bug which reduces the pointer-address for the next character by 1 if backspace is pressed but it does not check if there are characters left to remove.
 
 ![](exploitableCode.PNG)
 
@@ -82,15 +82,15 @@ Now entering "PONG" reveals the second flag `midnight{th4t_was_n0t_4_buG_1t_is_a
     Description:
     You might be cool, but are you 5 popped shells cool?
     
-This challenge consisted out of writing a program that generated one shellcode that successfully calls one syscall with a given integer value and a pointer to a string on 5 different architectures (x86, x86_64, ARM, ARM64, MIPS-LE) without crashing before.
+This challenge consisted out of writing a program that generates one shellcode that successfully calls one syscall with a given integer value and a pointer to a string on 5 different architectures (x86, x86_64, ARM, ARM64, MIPS-LE) without crashing before.
     
 ## Solution
 
-Writing the syscall code was a rather easy task (and also avoidable by using pwnlib's shellcraft), the more difficult part was finding the separation code. The first separation which is the hardest was luckily already done https://github.com/ixty/xarch_shellcode/blob/master/stage0/README which surprisingly also are valid instructions on MIPS and thus acts as the x86/x86_64 separator in my code.
-To separate ARM64 from remaining ARM and MIPS the byte sequence XX-00-00-14 works.
+Writing the syscall code was a rather easy task (and also avoidable by using pwnlib's shellcraft). The more difficult part was finding the separation code. The first separation which is the hardest was luckily already done https://github.com/ixty/xarch_shellcode/blob/master/stage0/README which surprisingly also are valid instructions on MIPS and thus act as the x86/x86_64 separator in my code.
+To split ARM64 from remaining ARM and MIPS the byte sequence XX-00-00-14 works.
 And at the end XX-00-00-10 is used to differentiate MIPS from ARM.
 
-Layout of full shellcode:
+Layout of the full shellcode:
 ```
 EB-12-00-32 [x86/x86_64 separator]
     x86:     jmp x86Jump; add byte ptr [edx], dh
