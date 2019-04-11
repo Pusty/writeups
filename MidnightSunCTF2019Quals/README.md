@@ -52,7 +52,7 @@ Within the COMMAND.COM the text-input method contains a bug which reduces the po
 
 This makes it possible to overwrite arbitrary bytes that appear before the default 4 byte text-input buffer which is at address 0x039c.
 
-COMMAND.COM is also the application responsible for printing the realmode-password file, so my solution was to use the overwrite exploit to change the "FLAG1" filename to "FLAG2" and change the address of the "PONG" command handler within the command jump table to the entry point at offset 0x110.
+COMMAND.COM is also the application responsible for printing the realmode-password file, so my solution was to use the overwrite exploit to change the "FLAG1" filename to "FLAG2" and change the address of the "PONG" command handler within the command jump table to the flag print function at offset 0x174.
 
 ```python
 def writeToPosition(position, data):
