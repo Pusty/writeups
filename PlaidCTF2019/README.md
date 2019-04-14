@@ -8,7 +8,7 @@
 ## Solution
 
 The verification process consists out of a function that "encodes" each ASCII digit that was entered and checks if they match with a fixed array.
-If 20 correct digits are entered the number is treated as correct and is outputted as the flag.
+If 19 correct digits are entered the number is treated as correct and is outputted as the flag.
 
 By mapping each digit to the encoded value and then mapping the compare array back to the digits the values originate from results in the flag `PCTF{2052419606511006177}`.
 
@@ -50,7 +50,7 @@ Space Saver is a 100MB file starting with a DOS boot sector and some data within
 ## Solution
 
 Running "binwalk -e <binary>" extracts a RAR archive with a password protected picture called "final.png" from the image and also hints at the existence of PNG files in the file system.
-Examining the image in a hex editor manually and searching for the PNG Header shows multiple files, but 3 of them contain a short string at the end which didn't belong the file itself ("Spac", "3ei2", "herE").
+Examining the image in a hex editor manually and searching for the PNG Header shows multiple files, but 3 of them contain a short string at the end which didn't belong to the file itself ("Spac", "3ei2", "herE").
 
 Using the password "Spac3ei2herE" to extract the final.png file works and reveals the flag:
 
