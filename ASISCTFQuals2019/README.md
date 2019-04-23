@@ -369,7 +369,7 @@ l = [95.18, 85.15, 49.12, 83.02, 57.11, 95.27, 95.06, 95.35, 105.37, 63.41, 78.2
 indexed = [str(e).split(".") for e in l]
 indexed.sort(key=lambda x: x[1])
 print(''.join([chr(int(ind[0])) for ind in indexed]))
-ASIS{__G0O913_U5e_P0lYL1N3_iN_M4p5_Ri9h7?!!}
+# ASIS{__G0O913_U5e_P0lYL1N3_iN_M4p5_Ri9h7?!!}
 ```
 
 # Silk road I and III ID/Token
