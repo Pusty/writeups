@@ -8,7 +8,7 @@ The challenges provides a 64bit Linux binary that can encrypt files in a non-det
 
 The challenge uses a random value seeded with the current system time to determine the encryption values which are then xored with the data meant to be encrypted.
 As the generation of the encryption keys is independent of the file input and also limited to 65535 different sets, making a table out of all of them and
-trying to filter which can decrypted to printable characters is possible.
+trying to filter which can be decrypted to printable characters was my approach.
 
 This gdb script does that by modifying the random value to a fixed value, letting the binary calculate the values and then saving them to a file:
 ```python
@@ -91,22 +91,23 @@ for i in range(1,UPPERBORDER):
 print("Done..")
 ```
 
-Running it reveals that the encryption set was already the second one `[0002]: ASIS{U5in9_Pi_1n_Rev3rs1ng_w4s_e4sy_3n0u9h!!?}`.
+Running it reveals that the encryption set was already the second one
+`[0002]: ASIS{U5in9_Pi_1n_Rev3rs1ng_w4s_e4sy_3n0u9h!!?}`.
 
 # Medias
 
     Numbers, how clever and intelligent these numbers are!!
     
-Medias is a 64bit Linux binary that requests a number parameter to be supplied to decrypt the flag out of entered numbers sha1 hash.
+Medias is a 64bit Linux binary that requests a number parameter to be supplied to decrypt the flag out of the entered numbers sha1 hash.
 
 ## Solution
 
-While reversing the first stages of the input verification code the function at 0000289d sticks out as it's pretty linear and depending on it's output the binary either proceeds or stops.
+While reversing the first stages of the input verification code the function at `0000289d` sticks out as it's pretty linear and depending on its output the binary either proceeds or stops.
 
 ![](medias_verifyFunc.PNG)
 
-Looking further into it it shows that it checks the input for some constraints, separates it in 3 same sized pieces and runs further compares on them.
-Put into z3 they look like this:
+Looking further into it it shows that it checks the input for some constraints, separates it in three pieces with the same size and runs further compares on them.
+Putting them into z3 looks like this:
 
 ```python
 from z3 import *
@@ -156,7 +157,7 @@ while s.check():
     s.add(val > m[val].as_long()) # find all numbers until no are left
 ```
 
-and after entering one of the numbers the binary requests the largest one:
+After entering one of the resulting numbers the binary requests the largest one:
 ```
 ./medias 742112478421124785322358
 - please find the largest such number!
@@ -234,14 +235,14 @@ print(transformValues([parseLine("1.78, 2.5"), parseLine("1.12321321, 2.5", inde
 # 7e5f69764d7e5f637e4d616062417e6862457b606179516f7b7c7957
 ```
 
-Trying out some values reveals they match up with the results from the binary. (The floating point upper and lower values can be read at 0000000000002C4A in xmm0 and xmm1)
-Noticeable here is that after the encoded values some additional junk bytes appear, the original flag.enc file also contains one junk byte "0A" which needs to be removed or ignored.
+Trying out some values reveals they match up with the results from the binary (the floating point upper and lower values can be read at 0000000000002C4A in xmm0 and xmm1).
+Noticeable here is that after the encoded bytes some additional junk bytes appear ("FB 55 0A"), the original flag.enc file also contains one junk byte "0A" which needs to be removed or ignored.
 
 ![](mindspace_encoded.PNG)
 
-The reversed code showed that the input for the encryption needs in a "floating-point-number, floating-point-number" format so the task will be to recover those numbers from the encrypted flag file.
+The reversed code showed that the input for the encryption needs to be in a "floating-point-number, floating-point-number" format so the task will be to recover those numbers from the provided encrypted flag file.
 
-Do do that I turned around the above number processing and wrote functions to recover the original format:
+To do that I wrote functions to reverse the encoding code and to recover the original format:
 
 ```python
 ...
@@ -361,7 +362,7 @@ Which outputs
 True
 ```
 
-The numbers before the dots are the ASCII characters and the numbers behind them are the position they should be at.
+A quick look at the numbers and it becomes visible that the numbers before the dots are the ASCII characters and the numbers behind them are the position they should be at.
 A small sorting script reveals the flag:
 ```python
 l = [95.18, 85.15, 49.12, 83.02, 57.11, 95.27, 95.06, 95.35, 105.37, 63.41, 78.25, 108.21, 49.24, 79.1, 76.23, 89.22, 125.44, 77.31, 95.3, 112.33, 123.05, 95.14, 95.07, 55.4, 83.04, 101.17, 48.2, 33.43, 71.08, 52.32, 53.16, 51.13, 78.29, 104.39, 73.03, 51.26, 33.42, 65.01, 48.09, 80.19, 57.38, 105.28, 82.36, 53.34]
@@ -373,4 +374,4 @@ ASIS{__G0O913_U5e_P0lYL1N3_iN_M4p5_Ri9h7?!!}
 
 # Silk road I and III ID/Token
 
-Z3 Python Scripts and working numbers for solving the constrain part of Silk road I and Silk road III are in this folder as well.
+Z3 Python Scripts and working numbers for solving the constraints part of Silk road I and Silk road III are in this folder as well.
