@@ -57,7 +57,7 @@ except Exception:
 f.close()
 ```
 
-To start with the trace I looked at what decides whether a "NO" is entered and found out that the lower half of the registers r8, r9, r10, r12, r13, r14 and r15 are compared to their upper half and if all of them match "YE" is written to stdout.
+To start with the trace I looked at what decides whether a "NO" is written and found out that the lower half of the registers r8, r9, r10, r12, r13, r14 and r15 are compared to their upper half and if all of them match "YE" is printed instead.
 
 Example of the comparison of upper and lower half of the registers:
 
@@ -95,7 +95,7 @@ Looking through the trace and stepping through them in a debugger shows that for
 0x402884:	or     r12,0x1
 ```
 
-Part of the code for each character also looks like this, which is an interesting switch to 32bit mode and back to execute the `aas` instruction which was removed in the x86_64 instruction set.
+Part of the code for each character also looks the following, which is an interesting switch to 32bit mode and back to execute the `aas` instruction which was removed in the x86_64 instruction set.
 
 ```nasm
 0x4021f7:	jmp    FWORD PTR [rip+0x8]        # 0x402205
@@ -187,7 +187,7 @@ Based on the sampled input to output sets I assigned the registers to the bit pr
  R15 = bit 6
 ```
 
-Putting the initial register values that need to be matched in the correct order together reveals the flag:
+Putting the initial register values that need to be matched in the correct order reveals the flag:
 
 ```python
 def solution():
