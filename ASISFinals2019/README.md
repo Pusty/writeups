@@ -9,9 +9,9 @@ The binary checks whether the flag is correct or not.
 
 ## Solution
 
-The binary consists out of 60 checks whether the input is correct, because it checks each character of the file one at a time each constrain can be solved individually.
+The binary consists out of 59 checks whether the input is correct. Because it checks each character of the file one at a time each constrain can be solved individually.
 
-The checking blocks all look similar to this:
+The basic blocks responsible for checking a character all look similar to this:
 
 ![](cursed_app.PNG)
 
@@ -24,19 +24,21 @@ import claripy
 def main():
     print("Loading..")
     p = angr.Project("cursed_app.elf", load_options={'auto_load_libs': False})
-    # provide the argument to the fake file
-    state = p.factory.entry_state(args= ["cursed_app.elf", "tmpLicence"])
-
+    
     license_name = "tmpLicence"
-
+        
+    # provide the argument to the fake file
+    state = p.factory.entry_state(args= ["cursed_app.elf", license_name])
+    
+    # Create a string consisting out of 59 symbolic byte variables
     bytestring = None
     line = []
-    for i in range(0x3b):
+    for i in range(59):
         line.append(state.solver.BVS('tmpLicence_%d' % (i), 8))
     bytestring = claripy.Concat(*line)
     
-    
-    for byte in bytestring.chop(8): # only allow printable characters
+    # only allow printable characters
+    for byte in bytestring.chop(8): 
         state.add_constraints(byte >= '\x20') # ' '
         state.add_constraints(byte <= '\x7e') # '~'
 
@@ -54,14 +56,13 @@ def main():
 
     # explore the paths and continue from the one that worked
     for i in range(len(blocks)):
+        # explore until the next correct block is found and put the wrong ones into the avoid stash
         simgr.explore(
                 find=(0x400000 + blocks[i]),
                 avoid=(0x400000  + 0x1f4f)
             )
-        print(simgr)
         found = simgr.found[0]
         simgr.move('found', 'active') # add the path that reached the next block to the one we continue from
-        print("Found for "+str(i+1)+" characters.")
     data, actual_size, new_pos = license_file.read(0, 0x40) # read the symbolic file
     print(found.solver.eval(bytestring, cast_to=bytes)) # and output
     return
@@ -70,9 +71,9 @@ if __name__ == '__main__':
     main()
 ```
 
-Which after a short while returned the flag "ASIS{y0u_c4N_s33_7h15_15_34R13R_7h4n_Y0u_7h1nk_r16h7?__!!!}".
+Which after a short while returns the flag `ASIS{y0u_c4N_s33_7h15_15_34R13R_7h4n_Y0u_7h1nk_r16h7?__!!!}`.
 While this works as a correct licence text for the binary, it doesn't match the given sha256 hash.
-Looking at it shows that "34R13R" probably should be "34513R" and indeed that also satisfies the constrains and is the correct flag:
+Looking at it shows that `34R13R` probably should be `34513R` (easier in leetspeak) and indeed it also satisfies the constrains and is the correct flag:
 
     ASIS{y0u_c4N_s33_7h15_15_34513R_7h4n_Y0u_7h1nk_r16h7?__!!!}
     
@@ -82,22 +83,22 @@ Looking at it shows that "34R13R" probably should be "34513R" and indeed that al
     Description:
     Secrets are kept out of reach for outsiders inside the helix! Can you bring them out?
     
-Helix contains a 64bit Linux binary and a file named "flag.enc" probably containing the flag in an encrypted format.
-To run Helix a file named "flag" is required to exist, which is then encrypted and written to "flag.enc"
+Helix contains a 64bit Linux binary and a file named `flag.enc` probably containing the flag in an encrypted format.
+To run Helix a file named `flag` is required to exist, which is then encrypted and written to `flag.enc`
 
 ## Solution
 
 Looking into the binary the inner workings can be summarized as:
 
-  - Check for the "flag" file and read it if it exists
-  - Determine the first x for which x*x >= length(fileContent) is correct
-  - Fill a C++ vector with the fileContent and (x*x - fileContent) random bytes
-  - Calculate a random variable o and apply (c+o)&0xFF for each byte in the previously created vector
+  - Check for the `flag` file and read it if it exists
+  - Determine the first x for which `x*x >= length(fileContent)` is correct
+  - Fill a C++ vector with the fileContent and `(x*x - fileContent)` random bytes
+  - Calculate a random variable o and apply `(c+o)&0xFF` for each byte in the previously created vector
   - Split the vector into a vector of x vectors, where each vector contain x elements of the original vector
-  - Put the vector of vectors through a recursive scrambling method which outputs a vector<byte> containing the encrypted and scrambled data
-  - Write the bytes of the scrambled data into the "flag.enc" file
+  - Put the vector of vectors through a recursive scrambling method which outputs a vector containing the encrypted and scrambled data
+  - Write the bytes of the scrambled data into the `flag.enc` file
   
-The scrambling method outputs different patterns depending on x, and for the provided "flag.enc" file, which is 11881 bytes in size, x is 109.
+The scrambling method outputs different patterns depending on x, and for the provided `flag.enc` file, which is 11881 bytes in size, x is 109.
 Based on this I wrote a gdb script that creates a dummy flag file of size x*x and traces the recursive scrambling and access to data to create an array containing the scrambled order of indexes for a given x.
 
 ```python
@@ -167,8 +168,8 @@ print([hex(x) for x in listOfLists[0]]) # output the final scrambling format
 gdb.execute("continue")                 # let it write the "flag.enc" file for confirming it worked
 ```
 
-The "applyUnscramble.py" script contains the scramble index array and the reversing of it (not included here because it's quite long) as well as reversing the (c+o)&0xFF operation (o is 8 for the provided "flag.enc" file which can easily be guessed based by the amount of 0x08 bytes at the beginning after unscrambling).
+The `applyUnscramble.py` script contains the scramble index array and the reversing of it (not included here because it's quite long) as well as reversing the `(c+o)&0xFF` operation (o is 8 for the provided `flag.enc` file which can easily be guessed based by the amount of 0x08 bytes at the beginning after unscrambling).
 
 The result is a PNG file with the flag on it:
 
-![](helix.PNG)
+![](helix.png)
