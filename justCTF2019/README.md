@@ -53,8 +53,6 @@ After playing the correct sound track it presents the flag.
 
 ## Solution
 
-Just as a warning this solution is quite hacky:
-
 Upon statically analysing the plugin the following md5 hashes were interesting among the string in the binary:
 
     714d32d45f6cb3bc336a765119cb3c4c
@@ -62,7 +60,7 @@ Upon statically analysing the plugin the following md5 hashes were interesting a
     bc9189406be84ec297464a514221406d
     4ec6aa45006dae153d94abd86b764e17
     
-The function containing them (at RVA :$23A270) is quite interesting as it processes the sound played within the audio editing software in some sort, hashes it in sets of 3 and compares them against the previously mentioned string.
+The function containing them (at RVA :$23A270) is quite interesting as it processes the sound played within the audio editing software in some sort, hashes it in sets of 3 bytes and compares them against the previously mentioned strings.
 Some of the md5 hashes are referenced more than once and looking them up online shows that they also originate from 3 byte combinations.
 Correctly sorted they look this:
 
@@ -76,7 +74,7 @@ Correctly sorted they look this:
 
 Consequentially the sound bytes processed by this function have to match "QQQMTQMTQXXXYTPMTQ" (or at least I assume so, either way this string works).
 
-To change the music data to match I didn't actually created a correct audio file, but did it forcefully with a debugger.
+To change the music data to match I didn't actually creat a correct audio file, but did it forcefully with a debugger.
 
 After getting the plugin to load in Reaper I
  - created a new line
@@ -89,11 +87,11 @@ I then
  - added and opened the GoSynthesizeTheFlagYourself plugin
  - attached a debugger to Reaper
  - inserted a breakpoint at relative address :$23A4E0 to the base of the plugin
- - played the midi soundtrack
+ - played the midi soundtrack from the beginning
  
 ![](img/breakpoint.PNG)
 
-At the breakpoint address the `rax` register contains the start address of the data that has to match, in this case with the soundtrack I made only '?' character.
+At the breakpoint address the `rax` register contains the start address of the data that has to match, in this case with the soundtrack I made only '?' characters.
 
 ![](img/modified.PNG)
 
@@ -108,11 +106,11 @@ Replacing it in-memory with the "QQQMTQMTQXXXYTPMTQ" string, removing the breakp
     
     77 solves overall, 13th solve
     
-The challenge consists out of a SystemVerilog file which depending on the current state and the input `di` advance to the next state and output a signal if it reached the solution state.
+The challenge consists out of a SystemVerilog file which depending on the current state and the input `di` advance to the next state and outputs a signal if it reached the solution state.
 
 ## Solution
 
-By iterating over the file and filtering out the conditions for state transfer I created a map from the old state to the new states and required `di`'s (which construct the flag).
+By iterating over the file and filtering out the conditions for state transfer I created a map from the old states to the new states and required `di`'s (which construct the flag).
 
 ```python
 f = open("fsmir.sv")
@@ -129,7 +127,7 @@ for line in lines:
     entries[cond] = (result, chr(check^cond))                        # as "(di ^ c) == check", check^c = di
 ```
 
-Starting from state 0 I traversed the map until I reached the solution state 59 and saved the `di`/flag parts while doing so:
+Starting from state 0 I traversed the map until I reached the solution state `assign solved = c == 8'd59;` and saved the `di` / flag parts while doing so:
 
 ```python
 state = 0
@@ -154,11 +152,11 @@ justCTF{SystemVerilog_is_just_C_with_fancy_notation_right?}
 
     52 solves overall, 6th solve
     
-The challenge consists out of a SystemVerilog file which depending on the current state and the input `di` advance to the next state and output a signal if it reached the solution state.
+The challenge consists out of a SystemVerilog file which depending on the current state and the input `di` advance to the next state and outputs a signal if it reached the solution state.
 
 ## Solution
 
-By iterating over the file and filtering out the conditions for state transfer I created a map from the new state to the previous states and required `di`'s (which construct the flag).
+By iterating over the file and filtering out the conditions for state transfers I created a map from the new states to the previous states and required `di`'s (which construct the flag).
 
 ```python
 f = open("fsmir2.sv")
