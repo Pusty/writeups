@@ -74,7 +74,7 @@ Correctly sorted they look this:
 
 Consequentially the sound bytes processed by this function have to match "QQQMTQMTQXXXYTPMTQ" (or at least I assume so, either way this string works).
 
-To change the music data to match I didn't actually creat a correct audio file, but did it forcefully with a debugger.
+To change the music data to match I didn't actually create a correct audio file, but did it forcefully with a debugger.
 
 After getting the plugin to load in Reaper I
  - created a new line
