@@ -49,7 +49,7 @@ Setting the value to a string results in variating output depending on the chara
 ```
 
 A look into the code shows that it takes each character from the string entered and subtracts them from a value read from an internal register.
-If the values match it continues with then next character, otherwise it outputs the difference and exits.
+If the values match it continues with the next character, otherwise it outputs the difference and exits.
 
 ![](loop.PNG)
 
@@ -87,6 +87,7 @@ def delta(v):
     
 Pybonhash consists out of pybonhash.cpython-36.pyc and hash.txt.
 When giving pybonhash an input file it "hashes" the content with the flag as key.
+The task is to derive the flag from the hash out of hash.txt.
 
 ## Solution
 
@@ -135,7 +136,7 @@ print(output)
 
 Because characters are MD5 hashed in pairs of two and AES encrypted with only two characters of the key each iteration it's possible to reconstruct the key and parts of the input data based on the hash.
 
-By first creating a lookup table for all hashed data combinations:
+By first creating a lookup table for all md5 hashed data combinations:
 
 ```python
 # Build Lookup table for the hashed data pairs
@@ -239,7 +240,7 @@ Let's play an Indian guessing game!
 Let's play an Indian guessing game!
 ```
 
-Non Number Input:
+Non number input:
 
 ```
 Let's play an Indian guessing game!
