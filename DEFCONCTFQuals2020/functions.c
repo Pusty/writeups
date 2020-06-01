@@ -11,26 +11,26 @@ struct tree{ // sizeof(0x20)
     struct tree* p2;
 };
 
-struct tree* linkedList(struct tree* l, char c);
+struct tree* appendElement(struct tree* l, char c);
 struct tree* create(char c);
 struct tree* modify(struct tree* l);
 struct tree* modify2(struct tree* l);
 
 
-void printListSub(struct tree* l) {
+void printTreeSub(struct tree* l) {
     if(l == 0) {
         printf("NULL");
         return;
     }
     printf("L(0x%02X, %d, %d) -> {", l->character, l->value1, l->value2);
-    printListSub(l->p1);
+    printTreeSub(l->p1);
     printf(" , ");
-    printListSub(l->p2);
+    printTreeSub(l->p2);
     printf("}");
 }
 
-void printList(struct tree* l) {
-    printListSub(l);
+void printTree(struct tree* l) {
+    printTreeSub(l);
     printf("\n");
 }
 
@@ -39,23 +39,23 @@ int main(char** args) {
     puts("Testing...");
     struct tree* var_8 = 0;
     var_8 = appendElement(var_8, 'O');
-    printList(var_8);
+    printTree(var_8);
     var_8 = appendElement(var_8, 'O');
-    printList(var_8);
+    printTree(var_8);
     var_8 = appendElement(var_8, 'O');
-    printList(var_8);
+    printTree(var_8);
     var_8 = appendElement(var_8, '{');
-    printList(var_8);
+    printTree(var_8);
     var_8 = appendElement(var_8, 't');
-    printList(var_8);
+    printTree(var_8);
     var_8 = appendElement(var_8, 'e');
-    printList(var_8);
+    printTree(var_8);
     var_8 = appendElement(var_8, 's');
-    printList(var_8);
+    printTree(var_8);
     var_8 = appendElement(var_8, 't');
-    printList(var_8);
+    printTree(var_8);
     var_8 = appendElement(var_8, '}');
-    printList(var_8);
+    printTree(var_8);
     
     return 0;
 }
