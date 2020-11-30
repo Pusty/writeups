@@ -10,7 +10,7 @@ Tenet is a service that takes up to 2000 bytes of shellcode the user supplies an
 
     - The shellcode can only be up to 2000 bytes long
     - The start of the shellcode is in a Read-Execute memory page at `0xDEAD0000`
-    - The service puts 0x80 bytes of shellcode for preparation before so the supplied shellcode starts at `0xDEAD0080`
+    - The service puts 0x80 bytes of shellcode for preparation in front so the supplied shellcode starts at `0xDEAD0080`
     - The shellcode process has a Read-Write memory page at `0x02170000`
     - The preparation shellcode unmaps the stack so we only have the RX `0xDEAD0000` and RW `0x02170000` memory page
     
@@ -18,22 +18,29 @@ Tenet is a service that takes up to 2000 bytes of shellcode the user supplies an
 
 ```C
   while ( 1 ) {
+  
     if (ptrace(PTRACE_SINGLESTEP, pid, 0, 0))   // Step a single instruction
       err(1, "ptrace");
+      
     waitForPID = wait(&stat_loc);               // Wait for the instruction
     if (!(stat_loc & 0x7F))
       break;
+      
     isChildDead = (stat_loc >> 8) & 0xFF;
     if (isChildDead != 5)                       // Stop if the shellcode died
       errorMessage("Child dead unexpectedly.");
+      
     if (stepCounter > 0xFFF)                    // Only do 0xFFF steps
       errorMessage("Too many steps.");
+      
     if (shellcodeReached != 1 && getRIP() == 0xDEAD0080) { // Start of shellcode
+    
       shellcodeReached = 1;
       nop();
       resetState();                             // Reset all registers
       nullMemory();                             // Zero the 0x2170000 memory page
       writeCookie();                            // Write a random 8 byte cookie to 0x2170000
+      
     }
     if (shellcodeReached) {                     // In the actual shellcode don't execute
                                                 // syscalls
@@ -41,11 +48,13 @@ Tenet is a service that takes up to 2000 bytes of shellcode the user supplies an
                                                 // Exit on a exit syscall
         doesExit = 1;                           // Stop the execution
         break;
+        
       }
       currentStep = stepCounter++;
       RIPArray[currentStep] = getCurrentRIP();  // Save the instruction pointer
                                                 // of each executed instruction
     }
+    
   }
 ```
 
@@ -97,7 +106,7 @@ void timemachine() {
 
   resetState(); // Reset registers
   
-  for ( curStep = stepCounter - 1; curStep >= 0; --curStep ) { // Iterate backwards to travel back in time
+  for ( curStep = stepCounter - 1; curStep >= 0; curStep-- ) { // Iterate backwards to travel back in time
   
     if (ptrace(PTRACE_GETREGS, pid, 0, &regs)) // Read the current register state
       err(1, "ptrace");
@@ -122,10 +131,11 @@ void timemachine() {
       errorMessage("Child dead..");
       
   }
+  
 }
 ```
 
-This means our shellcode has to delete the cookie when executed and rewrite the cookie back to memory when executed in reverse order while somehow preserving the cookie somewhere to access after register resets.
+This means our shellcode has to delete the cookie when executed and rewrite the cookie back to memory when executed in reverse order while somehow preserving the cookie somewhere to access after the state is reset.
 
 
 ### AVX!
@@ -242,7 +252,7 @@ mov rax, 0x02170000
 
 
 This challenge was pretty easy, the binary contained all the constrains for the 20 input numbers after each other.
-The control flow was a unusual but besides that reimplementing them in python and solving for them with z3 directly worked:
+The control flow was a bit unusual but besides that reimplementing them in python and solving for them with z3 directly worked:
 
 ```python
 from z3 import *
@@ -355,13 +365,13 @@ for i in range(20):
 
     just run it and get the flag
     
-Run Run Run! is a Garmin Connect IQ executable written in Monkey C. Goal is to run it, but the code execution will be not feasibly slow so reimplementation needed to solve it.
+Run Run Run! is a Garmin Connect IQ executable written in Monkey C. The task is extracting and optimizing the algorithm used to calculate the flag.
 
 ## Solution
 
 ### Step 1 - What even is a Connect IQ executable / PRG File
 
-To this the [garmin developer documentation](https://developer.garmin.com/connect-iq/connect-iq-basics/getting-started/) mentions it's the output of the Monkey C compiler:
+To this question the [garmin developer documentation](https://developer.garmin.com/connect-iq/connect-iq-basics/getting-started/) mentions it's the output of the Monkey C compiler:
 
     monkeyc calls the Monkey C compiler. The compiler can take code from multiple files and link them together into a single Connect IQ executable (a PRG file).
     
@@ -386,7 +396,7 @@ The most interesting feature I noticed in the simulator is the memory viewer:
 
 ![](img/sim.PNG)
 
-Interesting a `magic` array. Also notable was an array called `target` which contained a few powers of three.
+Interesting is the `magic` array. Also notable was an array called `target` which contained a few powers of three.
 
 
 Ok next ciqdb, which outputs tons of information regarding entry points, data, fields, code, classes, line of code tables, symbols, resources, exceptions and the signature.
@@ -448,7 +458,7 @@ The official debugger doesn't seem to be able to show bytecode either (or even l
 [And there is no documentation of the bytecode either..](https://forums.garmin.com/developer/connect-iq/f/discussion/7675/is-there-some-reference-of-the-connect-iq-vm-instruction-set)
 
 This would be pretty bad.... if the compiler the sdk provides wasn't within a potential interesting JAR file.
-Through lots of dedication this lead to `runrunrun/disassemble.py` which also incorporates the knowledge from the Line Number Table.
+Through lots of deduction this lead to the results in `runrunrun/disassemble.py` which also incorporates the knowledge from the Line Number Table.
 
 ```
 timerCallback:
