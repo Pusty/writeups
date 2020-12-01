@@ -727,15 +727,11 @@ I wasn't smart enough for the optimizing but my teammate esrever from polygl0ts 
 
 It turns out
 
-    s(-2) = 1, s(-1) = 1, s(0) = 1, s(x) = 2*s(x-1) + s(x-2) + 7*s(x-3)
+![](img/before.PNG)
     
 can be turned into 
 
 ![](img/solve.PNG)
-
-With
-
-    s(x) =  solve(x)[0][2] + solve(x)[1][2] + solve(x)[2][2]
 
 (Assuming that input x > 0)
 
