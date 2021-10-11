@@ -101,7 +101,7 @@ One method to do that is to calculate the minimal cost of arriving to a specific
 As the backwards calculated cost of a node can't get lower if all the children of it have been traversed, there is no need to traverse all paths anymore.
 It is only required to traverse all nodes.
 
-To work with the self-modifying code I used (capstone)[https://www.capstone-engine.org/]. 
+To work with the self-modifying code I used [capstone](https://www.capstone-engine.org/). 
 The following script uses the above displayed method to find the shortest path:
 
 ```python
