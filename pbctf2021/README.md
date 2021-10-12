@@ -515,23 +515,20 @@ sim.io.MIB_R0C60_PIOT0_JPADDIA_PIO = 1
 while True:
     texttosend = input("< ")
     if texttosend == "": texttosend = "\x00"
+    textreceived = ""
     for chartosend in texttosend:
         writebyte(ord(chartosend))
         datareceived = readbyte()
-        print("> "+chr(datareceived))
+        textreceived = textreceived + chr(datareceived)
+    print("> "+textreceived)
 ```
 
 ```
 < Ping
-> P
-> i
-> n
-> g
+> Ping
 < Pong
-> P
-> o
-> n
-> g
+> Pong
+<
 ```
 
 
@@ -687,4 +684,13 @@ After the password is entered, the service outputs the flag to us:
 >bctf{h4rdware_backd00rs_4r3_very_fun!
 >bctf{h4rdware_backd00rs_4r3_very_fun!}
 Done...
+```
+
+And to confirm let's do it directly per UART as well:
+
+```
+< v3ril0g_1s_pain_peko
+> v3ril0g_1s_pain_peko
+< AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+> pbctf{hrdware_bacd00rs_4r3_vry_fun!}
 ```

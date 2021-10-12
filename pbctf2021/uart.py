@@ -40,7 +40,7 @@ def writebyte(d):
         setdata((d >> b) & 1)
         for waitfor in range(CLOCK_RATE):
             tick_clock()
-    # HIGH for two UART ticks to process data
+    # HIGH for one UART tick to process data
     setdata(1)
     for waitfor in range(CLOCK_RATE):
         tick_clock()
@@ -67,10 +67,12 @@ sim.io.MIB_R0C60_PIOT0_JPADDIA_PIO = 1
 while True:
     texttosend = input("< ")
     if texttosend == "": texttosend = "\x00"
+    textreceived = ""
     for chartosend in texttosend:
         writebyte(ord(chartosend))
         datareceived = readbyte()
-        print("> "+chr(datareceived))
+        textreceived = textreceived + chr(datareceived)
+    print("> "+textreceived)
     
 #sim.stop_gtkwave()
 #sim.stop_vcd_trace()

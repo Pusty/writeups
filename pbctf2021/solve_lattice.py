@@ -39,9 +39,9 @@ def writebyte(d):
         setdata((d >> b) & 1)
         for waitfor in range(CLOCK_RATE):
             tick_clock()
-    # HIGH for two UART ticks to process data
+    # HIGH for one UART tick to process data
     setdata(1)
-    for waitfor in range(CLOCK_RATE):
+    for waitfor in range(CLOCK_RATE*1):
         tick_clock()
 
     
