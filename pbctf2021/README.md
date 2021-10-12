@@ -579,6 +579,9 @@ For the blue-block I'm not completely sure what each bit means, but after brutef
 01110110( Input) => 01110110 (Output) | Blue: 00000010
 ```
 
+
+### Password Bruteforce
+
 As assumed during static analysis these flipflops are indeed very interesting!
 With a small [solve script](solve_lattice.py) I then bruteforced each password character individually.
 After the password is entered, the service outputs the flag to us:
