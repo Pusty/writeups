@@ -386,9 +386,11 @@ NOTE: I didn't solve this challenge during the CTF, but I found it very interest
 
 Within the header of the binary file the string "LFE5U-25F-6CABGA381" can be found, this is the exact FPGA model for which this bitstream was generated.
 With this information further tooling can be found:
-    - Robert Xiao has a [writeup](https://ubcctf.github.io/2021/06/pwn2win-ethernetfromabove/) for Pwn2Win 2021's `Ethernet from Above` that contains code for ECP5 decompilation (in fact the tooling is also in upstream prjtrellis)
-    - The challenge author VoidMercy provided mid-ctf an update to [their tool](https://github.com/VoidMercy/Lattice-ECP5-Bitstream-Decompiler) for ECP5 decompilation
-    
+
+- Robert Xiao has a [writeup](https://ubcctf.github.io/2021/06/pwn2win-ethernetfromabove/) for Pwn2Win 2021's `Ethernet from Above` that contains code for ECP5 decompilation (in fact the tooling is also in upstream prjtrellis)
+
+- The challenge author VoidMercy provided mid-ctf an update to [their tool](https://github.com/VoidMercy/Lattice-ECP5-Bitstream-Decompiler) for ECP5 decompilation
+
 After a lot of trying around I decided to use VoidMercy's decompiler and used the following yosys commands to get [a very good output](chal.v):
 
 ```
@@ -444,8 +446,8 @@ Note: No get access to the internal signals using pyverilator, the top module mu
 Also newer Verilator version don't work with the current version of pyverilator, I downgraded to 4.020.
 
 ![](img/lllattice_serialgraph.png)
-(RED: Input Sampling, BLUE: Output Sampling)
 
+(RED: Input Sampling, BLUE: Output Sampling)
 
 
 Initially I had some problems figuring out in what format the service wants the data and how the timings are, but after a bit of testing and looking at VDD traces which contained a lot of helpful signals to figure out how the data is decoded and encoded, I got the UART interaction to work:
@@ -535,7 +537,7 @@ while True:
 
 Now as annotated in the Schematic Graph I grouped the flipflops together to read their value during runtime:
 
-```
+```python
 # red block = output buffer
 redBlock = 0
 redBlock = redBlock | (sim.internals["R3C38_PLC2_inst.sliceC_inst.ff_1.Q"]<<0)
@@ -570,7 +572,7 @@ blueBlock = blueBlock | (sim.internals["R3C42_PLC2_inst.sliceB_inst.ff_1.Q"]<<5)
 ```
 
 The bits of the red-block and yellow-block are sorted to match up with the input encoding.
-For the blue-block I'm not completely sure what each bit means, but after bruteforcing the first character through testing all 256 inputs, I noticed that for only one the bits change:`
+For the blue-block I'm not completely sure what each bit means, but after bruteforcing the first character through testing all 256 inputs, I noticed that for only one the bits change:
 
 ```
 0x76 (Input) => 0x76 (Yellow) => 0x76 (Red) | "v" (Character)
