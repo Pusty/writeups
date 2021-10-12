@@ -384,14 +384,14 @@ NOTE: I didn't solve this challenge during the CTF, but I found it very interest
 
 ### Decompilation
 
-Within the header of the binary file the string "LFE5U-25F-6CABGA381" can be found, this is the exact FPGA model for which this bitstream was generated.
+Within the header of the binary file the string `LFE5U-25F-6CABGA381` can be found, this is the exact FPGA model for which this bitstream was generated.
 With this information further tooling can be found:
 
-- Robert Xiao has a [writeup](https://ubcctf.github.io/2021/06/pwn2win-ethernetfromabove/) for Pwn2Win 2021's `Ethernet from Above` that contains code for ECP5 decompilation (in fact the tooling is also in upstream prjtrellis)
+- Robert Xiao has a [writeup](https://ubcctf.github.io/2021/06/pwn2win-ethernetfromabove/) for Pwn2Win 2021's `Ethernet from Above` that contains code for ECP5 decompilation (in fact the tooling is also in upstream [prjtrellis](https://github.com/YosysHQ/prjtrellis))
 
 - The challenge author VoidMercy provided mid-ctf an update to [their tool](https://github.com/VoidMercy/Lattice-ECP5-Bitstream-Decompiler) for ECP5 decompilation
 
-After a lot of trying around I decided to use VoidMercy's decompiler and used the following yosys commands to get [a very good output](chal.v):
+After a lot of trying around I decided to use VoidMercy's decompiler and used the following [yosys](https://github.com/YosysHQ/yosys) commands to get [a very good output](chal.v):
 
 ```
 read_verilog chal.tfg.v
@@ -406,7 +406,7 @@ write_verilog -noattr chal.v
 
 ### Static Analysis
 
-I then put the simplified Verilog file into Vivado, Synthesized it, and did further static analysis on the [RTL Schematic](img/lllattice_schematic.pdf):
+I then put the simplified Verilog file into Vivado, synthesized it, and did further static analysis on the [RTL Schematic](img/lllattice_schematic.pdf):
 
 ![](img/lllattice_overview.png)
 
@@ -415,7 +415,7 @@ Within the overview it is possible seperate the long left part, a big blob in th
 ![](img/lllattice_left.png)
 
 The left part mostly contains uninteresting UART decoding logic, but following the traces the 3 inputs can be identified.
-`G_HPBX0000` is `CLK`, `MIB_R0C60_PIOT0_JPADDIA_PIO` is `RESET` (and active low) and MIB_R0C40_PIOT0_JPADDIB_PIO is `RX` which is inactive when high.
+`G_HPBX0000` is `CLK`, `MIB_R0C60_PIOT0_JPADDIA_PIO` is `RESET` (and active low) and `MIB_R0C40_PIOT0_JPADDIB_PIO` is `RX` which is inactive when high.
 
 
 ![](img/lllattice_right.png)
@@ -440,7 +440,7 @@ The dark red logic is connected to the blue flipflops, which also connect to the
 
 To dynamically work with this program, the first thing I tried to do was to get the promised UART echo service running.
 
-I chose Verilator and the pyverilator wrapper around it to write my scripts.
+I chose [Verilator](https://www.veripool.org/verilator/) and the [pyverilator](https://github.com/csail-csg/pyverilator) wrapper around it to write my scripts.
 
 Note: No get access to the internal signals using pyverilator, the top module must be named like the file (This wasted more of my time than it should have)
 Also newer Verilator version don't work with the current version of pyverilator, I downgraded to 4.020.
