@@ -369,3 +369,317 @@ for i in range(len(checksums)):
     pbctf{acKshuaLLy_p0rtable_3x3cutAb
     pbctf{acKshuaLLy_p0rtable_3x3cutAbLe
     pbctf{acKshuaLLy_p0rtable_3x3cutAbLe?}
+
+
+# LLLattice
+
+    It seems like there is a UART echoserver design running on a Lattice FPGA. The UART bus runs 8N1 at a rate of 100 clocks per symbol. Can you reverse it and find out what secret it holds?
+    Author: VoidMercy
+    
+LLLattice provides a ECP5 Lattice FPGA bitstream to work with
+
+NOTE: I didn't solve this challenge during the CTF, but I found it very interesting and decided to spent a bit more time on it after
+   
+## Solution
+
+### Decompilation
+
+Within the header of the binary file the string "LFE5U-25F-6CABGA381" can be found, this is the exact FPGA model for which this bitstream was generated.
+With this information further tooling can be found:
+    - Robert Xiao has a [writeup](https://ubcctf.github.io/2021/06/pwn2win-ethernetfromabove/) for Pwn2Win 2021's `Ethernet from Above` that contains code for ECP5 decompilation (in fact the tooling is also in upstream prjtrellis)
+    - The challenge author VoidMercy provided mid-ctf an update to [their tool](https://github.com/VoidMercy/Lattice-ECP5-Bitstream-Decompiler) for ECP5 decompilation
+    
+After a lot of trying around I decided to use VoidMercy's decompiler and used the following yosys commands to get [a very good output](chal.v):
+
+```
+read_verilog chal.tfg.v
+hierarchy -top top
+synth
+flatten
+opt
+clean
+opt_clean -purge
+write_verilog -noattr chal.v
+```
+
+### Static Analysis
+
+I then put the simplified Verilog file into Vivado, Synthesized it, and did further static analysis on the [RTL Schematic](img/lllattice_schematic.pdf):
+
+![](img/lllattice_overview.png)
+
+Within the overview it is possible seperate the long left part, a big blob in the middle and the right part.
+
+![](img/lllattice_left.png)
+
+The left part mostly contains uninteresting UART decoding logic, but following the traces the 3 inputs can be identified.
+`G_HPBX0000` is `CLK`, `MIB_R0C60_PIOT0_JPADDIA_PIO` is `RESET` (and active low) and MIB_R0C40_PIOT0_JPADDIB_PIO is `RX` which is inactive when high.
+
+
+![](img/lllattice_right.png)
+
+The right part is more interesting, as it contains the multiplexer logic to choose which bit from the output buffer to actually output.
+The only output is obviously the UART output. The red buffers in the image are the buffers that contain the next byte to output.
+The yellow buffers contain the last byte that was input. 
+
+![](img/lllattice_toggle.png)
+
+Interestingly, the output buffer is not directly connected to the input buffer, even though it is meant to be an echo service.
+In fact there are multiplexers that either choose the input or something that is computed by the purple area.
+
+![](img/lllattice_middle.png)
+
+Now the most interesting part is the middle. The input is buffered in the dark orange buffers. These connect directly to the yellow buffers.
+But they are also connected to weird dark red logic. I assume this is where the password is encoded, which we need to enter to get the flag.
+The dark red logic is connected to the blue flipflops, which also connect to the logic where I assumed the flag is encoded.
+
+
+### Dynamic Analysis
+
+To dynamically work with this program, the first thing I tried to do was to get the promised UART echo service running.
+
+I chose Verilator and the pyverilator wrapper around it to write my scripts.
+
+Note: No get access to the internal signals using pyverilator, the top module must be named like the file (This wasted more of my time than it should have)
+Also newer Verilator version don't work with the current version of pyverilator, I downgraded to 4.020.
+
+![](img/lllattice_serialgraph.png)
+(RED: Input Sampling, BLUE: Output Sampling)
+
+
+
+Initially I had some problems figuring out in what format the service wants the data and how the timings are, but after a bit of testing and looking at VDD traces which contained a lot of helpful signals to figure out how the data is decoded and encoded, I got the UART interaction to work:
+
+```python
+import os
+import pyverilator
+import random
+
+build_dir = os.path.join(os.path.dirname(__file__), 'build', os.path.basename(__file__))
+os.makedirs(build_dir, exist_ok = True)
+os.chdir(build_dir)
+
+with open('chal.v', 'w') as out:
+    with open('../../chal.v', 'r') as f:
+            out.write(f.read())
+
+sim = pyverilator.PyVerilator.build('chal.v')
+
+
+def tick_clock(datamap=None):
+    sim.io.G_HPBX0000 = 0 # CLK = 0
+    sim.io.G_HPBX0000 = 1 # CLK = 1
+    
+def setdata(v):
+    sim.io.MIB_R0C40_PIOT0_JPADDIB_PIO = v # TX = v
+
+def readdata():
+    return sim.io.MIB_R0C40_PIOT0_PADDOA_PIO # RX
+    
+def writebyte(d):
+    # LOW for one UART tick to indicate sending
+    setdata(0)
+    for waitfor in range(CLOCK_RATE):
+        tick_clock()
+    # Send data bit for bit
+    for b in range(8):
+        setdata((d >> b) & 1)
+        for waitfor in range(CLOCK_RATE):
+            tick_clock()
+    # HIGH for two UART ticks to process data
+    setdata(1)
+    for waitfor in range(CLOCK_RATE):
+        tick_clock()
+
+    
+def readbyte():
+    c = 0
+    # receive data bit for bit
+    for x in range(8):
+        for waitfor in range(CLOCK_RATE):
+            tick_clock()
+        c = (readdata()<<x) | c
+    return c
+    
+CLOCK_RATE = 100 # as description says, 100 clock ticks per symbol
+
+# reset
+setdata(1)
+sim.io.MIB_R0C60_PIOT0_JPADDIA_PIO = 0
+for waitfor in range(CLOCK_RATE):
+    tick_clock()
+sim.io.MIB_R0C60_PIOT0_JPADDIA_PIO = 1
+
+while True:
+    texttosend = input("< ")
+    if texttosend == "": texttosend = "\x00"
+    for chartosend in texttosend:
+        writebyte(ord(chartosend))
+        datareceived = readbyte()
+        print("> "+chr(datareceived))
+```
+
+```
+< Ping
+> P
+> i
+> n
+> g
+< Pong
+> P
+> o
+> n
+> g
+```
+
+
+Now as annotated in the Schematic Graph I grouped the flipflops together to read their value during runtime:
+
+```
+# red block = output buffer
+redBlock = 0
+redBlock = redBlock | (sim.internals["R3C38_PLC2_inst.sliceC_inst.ff_1.Q"]<<0)
+redBlock = redBlock | (sim.internals["R5C38_PLC2_inst.sliceA_inst.ff_1.Q"]<<1)
+redBlock = redBlock | (sim.internals["R3C38_PLC2_inst.sliceB_inst.ff_0.Q"]<<2)
+redBlock = redBlock | (sim.internals["R3C40_PLC2_inst.sliceA_inst.ff_0.Q"]<<3)
+redBlock = redBlock | (sim.internals["R3C38_PLC2_inst.sliceD_inst.ff_0.Q"]<<4)
+redBlock = redBlock | (sim.internals["R5C38_PLC2_inst.sliceB_inst.ff_0.Q"]<<5) 
+redBlock = redBlock | (sim.internals["R3C38_PLC2_inst.sliceA_inst.ff_0.Q"]<<6) 
+redBlock = redBlock | (sim.internals["R3C40_PLC2_inst.sliceD_inst.ff_0.Q"]<<7)
+
+
+# yellow block = normal output / echo
+yellowBlock = 0
+yellowBlock = yellowBlock | (sim.internals["R2C39_PLC2_inst.sliceD_inst.ff_0.Q"]<<0)
+yellowBlock = yellowBlock | (sim.internals["R5C40_PLC2_inst.sliceD_inst.ff_0.Q"]<<1)
+yellowBlock = yellowBlock | (sim.internals["R2C40_PLC2_inst.sliceB_inst.ff_0.Q"]<<2)
+yellowBlock = yellowBlock | (sim.internals["R2C42_PLC2_inst.sliceB_inst.ff_0.Q"]<<3)
+yellowBlock = yellowBlock | (sim.internals["R4C39_PLC2_inst.sliceC_inst.ff_0.Q"]<<4)
+yellowBlock = yellowBlock | (sim.internals["R6C39_PLC2_inst.sliceD_inst.ff_0.Q"]<<5)
+yellowBlock = yellowBlock | (sim.internals["R4C40_PLC2_inst.sliceD_inst.ff_0.Q"]<<6)
+yellowBlock = yellowBlock | (sim.internals["R5C39_PLC2_inst.sliceD_inst.ff_0.Q"]<<7)
+
+# interesting comparison results
+blueBlock = 0
+blueBlock = blueBlock | (sim.internals["R3C41_PLC2_inst.sliceB_inst.ff_1.Q"]<<0)
+blueBlock = blueBlock | (sim.internals["R4C43_PLC2_inst.sliceC_inst.ff_0.Q"]<<1)
+blueBlock = blueBlock | (sim.internals["R4C41_PLC2_inst.sliceC_inst.ff_0.Q"]<<2)
+blueBlock = blueBlock | (sim.internals["R6C43_PLC2_inst.sliceA_inst.ff_0.Q"]<<3)
+blueBlock = blueBlock | (sim.internals["R4C42_PLC2_inst.sliceC_inst.ff_0.Q"]<<4)
+blueBlock = blueBlock | (sim.internals["R3C42_PLC2_inst.sliceB_inst.ff_1.Q"]<<5)
+```
+
+The bits of the red-block and yellow-block are sorted to match up with the input encoding.
+For the blue-block I'm not completely sure what each bit means, but after bruteforcing the first character through testing all 256 inputs, I noticed that for only one the bits change:`
+
+```
+0x76 (Input) => 0x76 (Yellow) => 0x76 (Red) | "v" (Character)
+01110110( Input) => 01110110 (Output) | Blue: 00000010
+```
+
+As assumed during static analysis these flipflops are indeed very interesting!
+With a small [solve script](solve_lattice.py) I then bruteforced each password character individually.
+After the password is entered, the service outputs the flag to us:
+
+```
+0x76 => 0x76 => 0x76 | v
+01110110 => 01110110 | B: 00000010
+>v
+0x33 => 0x33 => 0x76 | 3
+00110011 => 11111111 | B: 00001000
+>v3
+0x72 => 0x72 => 0x72 | r
+01110010 => 01110010 | B: 00001010
+>v3r
+0x69 => 0x69 => 0x72 | i
+01101001 => 11111111 | B: 00000001
+>v3ri
+0x6c => 0x6c => 0x6c | l
+01101100 => 01101100 | B: 00000011
+>v3ril
+0x30 => 0x30 => 0x6c | 0
+00110000 => 11111111 | B: 00001001
+>v3ril0
+0x67 => 0x67 => 0x67 | g
+01100111 => 01100111 | B: 00001011
+>v3ril0g
+0x5f => 0x5f => 0x67 | _
+01011111 => 11111111 | B: 00000100
+>v3ril0g_
+0x31 => 0x31 => 0x31 | 1
+00110001 => 00110001 | B: 00000110
+>v3ril0g_1
+0x73 => 0x73 => 0x31 | s
+01110011 => 11111111 | B: 00001100
+>v3ril0g_1s
+0x5f => 0x5f => 0x5f | _
+01011111 => 01011111 | B: 00001110
+>v3ril0g_1s_
+0x70 => 0x70 => 0x5f | p
+01110000 => 11111111 | B: 00000101
+>v3ril0g_1s_p
+0x61 => 0x61 => 0x61 | a
+01100001 => 01100001 | B: 00000111
+>v3ril0g_1s_pa
+0x69 => 0x69 => 0x61 | i
+01101001 => 11111111 | B: 00001101
+>v3ril0g_1s_pai
+0x6e => 0x6e => 0x6e | n
+01101110 => 01101110 | B: 00001111
+>v3ril0g_1s_pain
+0x5f => 0x5f => 0x6e | _
+01011111 => 11111111 | B: 00100000
+>v3ril0g_1s_pain_
+0x70 => 0x70 => 0x70 | p
+01110000 => 01110000 | B: 00100010
+>v3ril0g_1s_pain_p
+0x65 => 0x65 => 0x70 | e
+01100101 => 11111111 | B: 00101000
+>v3ril0g_1s_pain_pe
+0x6b => 0x6b => 0x6b | k
+01101011 => 01101011 | B: 00101010
+>v3ril0g_1s_pain_pek
+0x6f => 0x6f => 0x0 | o
+01101111 => 00000000 | B: 00100001
+>v3ril0g_1s_pain_peko
+>
+>b
+>bc
+>bct
+>bctf
+>bctf{
+>bctf{h
+>bctf{h4
+>bctf{h4r
+>bctf{h4rd
+>bctf{h4rdw
+>bctf{h4rdwa
+>bctf{h4rdwar
+>bctf{h4rdware
+>bctf{h4rdware_
+>bctf{h4rdware_b
+>bctf{h4rdware_ba
+>bctf{h4rdware_bac
+>bctf{h4rdware_back
+>bctf{h4rdware_backd
+>bctf{h4rdware_backd0
+>bctf{h4rdware_backd00
+>bctf{h4rdware_backd00r
+>bctf{h4rdware_backd00rs
+>bctf{h4rdware_backd00rs_
+>bctf{h4rdware_backd00rs_4
+>bctf{h4rdware_backd00rs_4r
+>bctf{h4rdware_backd00rs_4r3
+>bctf{h4rdware_backd00rs_4r3_
+>bctf{h4rdware_backd00rs_4r3_v
+>bctf{h4rdware_backd00rs_4r3_ve
+>bctf{h4rdware_backd00rs_4r3_ver
+>bctf{h4rdware_backd00rs_4r3_very
+>bctf{h4rdware_backd00rs_4r3_very_
+>bctf{h4rdware_backd00rs_4r3_very_f
+>bctf{h4rdware_backd00rs_4r3_very_fu
+>bctf{h4rdware_backd00rs_4r3_very_fun
+>bctf{h4rdware_backd00rs_4r3_very_fun!
+>bctf{h4rdware_backd00rs_4r3_very_fun!}
+Done...
+```
