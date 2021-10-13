@@ -450,7 +450,7 @@ Also newer Verilator version don't work with the current version of pyverilator,
 (RED: Input Sampling, BLUE: Output Sampling)
 
 
-Initially I had some problems figuring out in what format the service wants the data and how the timings are, but after a bit of testing and looking at VDD traces which contained a lot of helpful signals to figure out how the data is decoded and encoded, I got the UART interaction to work:
+Initially I had some problems figuring out in what format the service wants the data and how the timings are, but after a bit of testing and looking at VCD traces which contained a lot of helpful signals to figure out how the data is decoded and encoded, I got the UART interaction to work:
 
 ```python
 import os
@@ -545,7 +545,6 @@ redBlock = redBlock | (sim.internals["R3C38_PLC2_inst.sliceD_inst.ff_0.Q"]<<4)
 redBlock = redBlock | (sim.internals["R5C38_PLC2_inst.sliceB_inst.ff_0.Q"]<<5) 
 redBlock = redBlock | (sim.internals["R3C38_PLC2_inst.sliceA_inst.ff_0.Q"]<<6) 
 redBlock = redBlock | (sim.internals["R3C40_PLC2_inst.sliceD_inst.ff_0.Q"]<<7)
-
 
 # yellow block = normal output / echo
 yellowBlock = 0
