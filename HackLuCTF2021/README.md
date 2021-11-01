@@ -33,11 +33,11 @@ Interestingly the disassembler is wrongly aligned for the entry point given in t
 
 With this the actual reversing can begin:
 
-The entry point is in the `c.obj` file
-From the entry point the L509A memory is cleared and then the `GIMME FLAG AND GET STONKS>` string is copied to it.
-After that only external calls are done before the program exits.
+The entry point is in the `c.obj` file: 
+At the entry point the L509A memory is cleared and then the `GIMME FLAG AND GET STONKS>` string is copied to it.
+After that only "external" (outside of `c.obj`) calls are done before the program exits.
 
-The calls to address in the L50XX range all seem to relate hardware features, probably the writing to the screen and reading input:
+The calls to addresses in the L50XX range all seem to relate hardware features, probably the writing to the screen and reading input:
 
 ![](img/aobj.png)
 
@@ -46,7 +46,7 @@ Only the calls to L529E and L52E8, which are inside `b.obj` are interesting:
 ![](img/bobj.png)
 
 L529E seems to be encoding a buffer from L50C2 (probably the input) and storing the result at L5234.
-L52E8 iterates over the encoded buffer from L5234 and compares it values stored in L5200.
+L52E8 iterates over the encoded buffer from L5234 and compares it against values stored in L5200.
 
 So L529E probably encodes our input and L52E8 checks if the encoded input matches the encoded flag.
 
@@ -81,6 +81,6 @@ def decode(encodedArr):
     return ''.join(decodedStr)
 ```
 
-applying this on the array stored at L5200 yield the flag:
+applying this on the array stored at L5200 yields the flag:
 
 `Decode(compareArray):  FLAG_G3T_D3M_R3TR0_ST0NKZ!`
