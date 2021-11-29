@@ -8,7 +8,7 @@ NFT is a network traffic capture file containing nftables (NFT) setup traffic. T
 
 ## Solution
 
-For the `easy-nft` challenge my teammate Aaron wrote [a script](parse.py) to convert the pcap files into a [way more expressive format](dump.txt) which looks like this:
+For the `easy-nft` challenge my teammate Aaron wrote [a script](parse.py) to convert the pcap files into a [way more expressive format](dump.log) which looks like this:
 
 ```
 [...]
