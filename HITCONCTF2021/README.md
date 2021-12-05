@@ -3,19 +3,20 @@
     Description:
     The mercy of DEF CON 25.
 
-mercy provides a binary blob which itself doesn't expose any interesting information. With the hint of it being related to DEF CON 25 it's relatively easy figuring out it's probably a [cLEMENCy](https://blog.legitbs.net/2017/10/clemency-showing-mercy.html) binary.
+mercy provides a binary blob which itself doesn't expose any information.
+With the hint of it being related to DEF CON 25 the assumption was that it is a [cLEMENCy](https://blog.legitbs.net/2017/10/clemency-showing-mercy.html) binary.
 
 ## Solution
 
 A first step is to figure out what architecture this binary blob is.
 Starting with the assumption that it is indeed cLEMENCy, I started looking at [the official documentation and tooling](https://blog.legitbs.net/2017/07/the-clemency-architecture.html).
-Trying to run the blob in the emulator with a `flag` file full of `0's worked and the disassembly in the debugger seemed reasonable.
+Trying to run the blob in the emulator with a `flag` file full of 0's worked and the disassembly in the debugger seemed reasonable.
 
-With the help of [Trail of Bits Tooling](https://blog.trailofbits.com/2017/07/30/an-extra-bit-of-analysis-for-clemency/) the binary blob can be loaded into Binary Ninja.
+With the help of [Trail of Bits tooling](https://blog.trailofbits.com/2017/07/30/an-extra-bit-of-analysis-for-clemency/) the binary blob can be loaded into Binary Ninja.
 Their [original code](https://github.com/trailofbits/binjascripts/tree/master/clemency) didn't work for me for current Binary Ninja version, so I ported it to python3, fixed some problems that occurred and later added a few lifting features for the challenge.
 
 The first step is to convert the binary blob, in which each word is 9 bits in size to a more handy format of 16 bits per word.
-Trail of Bits Tooling has the [transform.py](TrailofBits_clemency/transform.py) script for that.
+Trail of Bits tooling has the [transform.py](TrailofBits_clemency/transform.py) script for that.
 
 Running strings on the unpacked blob with the 16 bits per word size in mind, returns a lot of libc strings:
 ```
@@ -43,17 +44,17 @@ December
 ice job: %s
 ```
 
-Browsing through the code makes it look reasonable as well:
+Browsing through the code makes the disassembly look correct as well:
 
-[](img/entry.PNG)
+![](img/entry.PNG)
 
 Identifying the main function can be done by browsing the code and searching for the most interesting strings (while keeping in mind that the addresses in the unpacked binary blob are all twice of what they are in the original one).
 
-[](img/main.PNG)
+![](img/main.PNG)
 
 The actual verification logic is luckily not too complex. Because the Binary Ninja plugin already had lifting features implemented, I added some missing parts to it, which makes understanding the logic much easier than staring at the weird disassembly:
 
-[](img/verify.PNG)
+![](img/verify.PNG)
 
 Having seen similar code already, it wasn't difficult to identify it as being similar to RC4.
 
@@ -124,7 +125,7 @@ def h16to9(inpHex):
 
 A bit more annoying was decoding the hardcoded constants the program verifies against:
 
-[](img/constants.PNG)
+![](img/constants.PNG)
 
 The encrypted input gets compared against the middle-endian encoded 27-bit numbers.
 
