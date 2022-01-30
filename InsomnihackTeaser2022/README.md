@@ -171,4 +171,4 @@ INS{Y0u_Kn0W_aB0uT_Th3_Her4ld_0F_the_G0ds?}
 
 And for confirmation, testing it in the app:
 
-![](herald-flag.PNG)
+![](writeup/herald-flag.PNG)
