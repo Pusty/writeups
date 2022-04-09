@@ -137,7 +137,7 @@ for i in range(INPUT_VALUE-2):
 
 While it is possible to optimize this further and run way faster natively, for the inputs requested (e.g. 17860729747217377493) this is still infeasibly slow.
 
-By using a recurrence matrix it is possible to calculate the wanted depth way faster though, as it allows for logarithmic speed instead of linear.
+By using a recurrence matrix it is possible to calculate the wanted depth way faster though, as it allows for logarithmic computation time in relation to input size instead of linear.
 
 ```python
 mtx = [
