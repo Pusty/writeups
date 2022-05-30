@@ -1,5 +1,7 @@
 # BIOS 
 
+    Yo, we hear you like BIOs in your BIOS so enjoy a BIOS of BIOs. Submit the part after "The Flag Is:"
+
 BIOS is a modified SeaBIOS image.
 
 ## Solution
@@ -200,6 +202,8 @@ With the flag being `Descent ][ Rules` (weird flag format..).
 
 
 # not-so-advanced
+
+    RE the ROM, figure out the code. Not in the flag{} format
 
 not-so-advanced is a GBA game that requests input and verifies whether it's a valid flag.
 
