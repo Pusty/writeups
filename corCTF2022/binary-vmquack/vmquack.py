@@ -110,7 +110,7 @@ class VMQuack(Architecture):
     
     stack_pointer = "rsp"
     link_reg  = "lr"
-    system_regs  = ["r5", "arg1", "arg2", "arg3", "arg4"]
+    system_regs  = ["r5", "sarg1", "sarg2", "sarg3", "sarg4"]
     
     flags = {}
     flag_roles = {}
