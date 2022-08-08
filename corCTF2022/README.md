@@ -14,15 +14,17 @@ vmquacks_revenge is a Linux binary that runs a virtual machine which takes in a 
 
 My teammate Aaron did most the virtual machine reversing, and generally the machine implemented is nothing special so a quick overview of our understanding:
 
-- There 54 instructions
-- Registers and memory access are 64 bit
+- There are 54 instructions
+- Registers and memory accesses are 64 bit unless specified otherwise by the instruction
 - Register 0 is a "zero" register that always holds 0
 - Register 1 is a link register and contains the last return address
 - Register 2 is the stack pointer
 - Register 3 is the frame pointer (like in x86)
-- Register 4 is a static pointer to global external memory (the .quack_quack_quack section of the binary with an offset of -x0x10)
+- Register 4 is a static pointer to global external memory (the .quack_quack_quack section of the binary with an offset of 0x10)
+- Registers 5-11 are arguments to functions (Register 5 also being the returned value)
 - The VM itself and the VM code contain self integrity checks
-- Some VM code / used variables are encrypted and need to be dumped at runtime after decryption
+- Some VM code / used variables are encrypted and need to be dumped at runtime after decryption (or decrypted using the same key)
+- The vm can do syscalls and call functions from the main program; so we need to be careful when running it (Luckily there wasn't too much trickery with this)
 
 Besides that, this is a standard custom virtual machine without any gimmicks.
 
@@ -40,7 +42,26 @@ c
 d
 ```
 
+Another way which is a bit slower due to the nature of conditional breakpoints would be to do:
+
+```
+break *0x402FB7 if *(long long*)(*(long long*)($rbp-0x38)+0x100) == 0x1339A09
+```
+
+Which will break in the store dword function if we're at a certain instruction.
+(Don't try to break in the main loop, it will slow down the program significantly).
+
 This way I was able to inspect the virtual machine state and exact operations without tripping any of the anti-debugging / self integrity checks.
+
+### Instructions
+
+Every instruction is 5 bytes long, the first being the opcode (Everything outside the range of 0 to 0x36 is considered invalid and makes the vm stop executing). After a bit of reversing it was pretty clear how the vm struct is allocated and which registers get set to which values. For example the value at offset 0x100 contains a pointer to the currently executing instruction. If any instruction would've used register 32 it would've overwritten that pointer leading to code redirection.
+
+We also mmap a stack and put the address to it into r2, and a static pointer to the vm data into r4.
+
+By analizing the implementation of the instructions we can further deduce the layout of the registers (For example a link register where the current code pointer is stored into when calling a function, which is r1).
+
+And apart from there being a bunch of arithmetic operations (and everything signed and unsigned), the jump and call instructions, memory load and store operations (signed, unsigned for all sizes of ints), and the compare instructions (again signed unsigned), there was also opcodes 0x35 and 0x36 which call `syscall` and functions from a predefined table respectively.
 
 ### Analyzing the VM
 
@@ -51,15 +72,15 @@ And after lots of troubleshooting (there are probably lots of lifting errors sti
 ![](img/vmquacks_revenge_main.png)
 
 The program reads up to 0x80 characters from stdin and then inverts their order. It allocates 8 arrays that are used to store the transformed input in if it matches the required format.
-If it matches then after some integrity checks the transformed input is verified and either accepted or rejected.
+If it matches then, after some integrity checks, the transformed input is verified and either accepted or rejected.
 
 ![](img/vmquacks_revenge_scary.png)
 
-As a fail safe if somehow a wrong key is validated there is also hashing logic (which is also used to decrypt the flag from the right key), but we didn't find any colliding correct input, so this is luckily nothing for us to worry about.
+As a failsafe, if somehow a wrong key is validated, there is also hashing logic (which is also used to decrypt the flag from the right key), but we didn't find any colliding correct input, so this is luckily nothing for us to worry about.
 
 ![](img/vmquacks_revenge_format.png)
 
-The input format function mostly just verifies that our input has a format like "AAAAAAAA-BBBBBBBB-CCCCCCCC-DDDDDDDD-EEEEEEEE-FFFFFFFF-00000000-11111111" where all 8 characters there will be a `-` and the allowed characters are`A-Za-z0-9`.
+The input format function mostly just verifies that our input has a format like "AAAAAAAA-BBBBBBBB-CCCCCCCC-DDDDDDDD-EEEEEEEE-FFFFFFFF-00000000-11111111" where groups of 8 characters will be separated by a `-` and the remaining characters are `a-zA-Z0-9`.
 Interesting is the block of code that runs what we named "weirdify" on the input and then stores it in global memory.
 
 ![](img/vmquacks_revenge_weirdify.png)
@@ -102,10 +123,42 @@ def weirdify(value, rngSeed, iteration):
 The verify code looks a bit scary when first looking at it and getting everything right (the lifter, analysis and re-implementation) took a lot of hours.
 The program iterating over our 8 key blocks that have been separated and "weirdified" into 8 matrices.
 
-It then multiplies the selected 8x1 matrix by a global 8x8 matrix. The global matrix is stored encrypted in memory and needs to be dumped AFTER it is decrypted (e.g. by breaking at one of the instructions in this function).
-The outgoing matrix is then used to calculate the value  `intArray[i2] = mulM[0] + 0x5c / curM[0] * 100000000`. This value needs to be positive and is later used to verify that the key blocks are sorted in ascending `intArray` value order.
+It then multiplies a global 8x8 matrix by the selected 8x1 matrix. The global matrix is stored encrypted in memory and needs to be dumped AFTER it is decrypted (e.g. by breaking at one of the instructions in this function; Aaron certainly never dumped the encrypted one).
+The outgoing matrix is then used to calculate the value  `intArray[i2] = (mulM[0] + 0x5c) / (curM[0] * 100000000)`. This value needs to be positive and is later used to verify that the key blocks are sorted in ascending `intArray` value order.
 
-Then for all values of the current matrix the constrain for `x` has to hold.
+Then for all values of the current matrix the following constraint has to hold:
+
+`abs(intArray[i2] * (curM[i] * 100000000) - mulM[i]) < 0x5c`
+
+which (when focusing on positive values) can be rewritten as
+
+`intArray[i2] * (curM[i] * 100000000) < (0x5c + mulM[i])`
+
+by pulling the `mulM[i]` to the right. Then we transform it further into
+
+`(mulM[0] + 0x5c) / (curM[0] * 100000000) * (curM[i] * 100000000) < (0x5c + mulM[i])`
+
+by plugging in the value of `intArray[i2]`. And finally we can pull the term with `curM[i]` to the right:
+
+`(mulM[0] + 0x5c) / (curM[0] * 100000000) < (0x5c + mulM[i]) /  (curM[i] * 100000000)`
+
+Similarily we can do the same thing for negative numbers:
+
+`intArray[i2] * (curM[i] * 100000000) - mulM[i] > -0x5c`
+
+will turn into
+
+`intArray[i2] * (curM[i] * 100000000) > mulM[i] - 0x5c`
+
+and by the same logic as above we obtain
+
+`(mulM[0] + 0x5c) / (curM[0] * 100000000) > (mulM[i] - 0x5c) / (curM[i] * 100000000)`
+
+which means we get
+
+`(mulM[i] - 0x5c) / (curM[i] * 100000000) < (mulM[0] + 0x5c) / (curM[0] * 100000000) < (0x5c + mulM[i]) /  (curM[i] * 100000000)`
+
+So the ratio of output and input can only deviate in a certain range.
 
 The working python reimplementation looks like this:
 
@@ -158,7 +211,7 @@ def runCheck(vec):
 
 Ok, so now we know how the VM works, how the key has to look like and how it is verified.
 This was a part were we where stuck on for quite a while as we knew how everything works but didn't know how to generate something that fulfills the requirements.
-We worked a lot of hours on refining z3 scripts, bruteforcing and debugging our reimplementations for mistakes, until at some point my teammate Aaron saved the day (like usual) and figured out that using a intger multiple of the eigenvectors of the global matrix fulfills the requirements.
+We worked a lot of hours on refining z3 scripts, bruteforcing and debugging our reimplementations for mistakes, until at some point my teammate Aaron saved the day (like usual) and figured out that using a (near) intger multiple of the eigenvectors of the global matrix fulfills the requirements.
 I have to admit that I don't really get why they do, or how he came to the conclusion but it works.
 
 
