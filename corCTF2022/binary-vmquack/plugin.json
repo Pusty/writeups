@@ -1,0 +1,13 @@
+{
+    "plugin": {
+        "name": "VMQuack Plugin",
+        "type": ["architecture"],
+        "api": "python3",
+        "description": "VMQuack Architecture",
+        "license": {
+            "name": "BSD-0-clause"
+        },
+        "version": "1.0",
+        "author": "Pusty"
+    }
+}
