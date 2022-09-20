@@ -142,7 +142,7 @@ print(decode([0x36]))
 print(decode([0xa0, 0x01]))
 ```
 
-Luckily the won't need to understand most instructions to see what the challenge wants us to do.
+Luckily there is no need to understand most instructions, to see what the challenge wants us to do.
 The first switch case is what we are interested in:
 
     - If the node we are looking at is a multiplication (`%v  = mul i64 %p0, %q0`)
