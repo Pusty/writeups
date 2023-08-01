@@ -33,28 +33,29 @@ What binary ninja is not showing well is that these emojis are actually only one
 ![](img/crabcalc.png)
 
 Now in the write function what is happening is:
-    - Check if Rust Struct for the file is initialized with a 10 emoji array
-    - Check if the string we are writing is utf8 decodable (and decode it - `_RNvNtNtCsfDBl8rBLEEc_4core3str8converts9from_utf8`)
-    - Split the string at `-` (`_RNvMsr_NtNtCsfDBl8rBLEEc_4core3str7patternNtB5_11StrSearcher3new`)
-    - Zip the split string and the randomly generated emojis
-    - Iterate for each emoji (so 10 times):
-        - Get the index of the emoji (from 0 at crab to 5 to dragon "🦀🐧🍋🐸🐱🐉")
-        - Get the current counter (initialized at the beginning at 0)
-        - Calculate `(emoji_index + counter) % 6`
-        - Check if the split string part matches the string table entry at that index (stringArray: `["crab", "penguin", "lemonthink", "msfrog", "af", "dragon"]`)
-        - If it doesn't match: FAIL
-    - If all 10 emojis matched their string table entry and `counter == 0xa`: `giveFlag = 1`
-    - If all 10 emojis matched their string table entry: `counter = counter + 1`
+
+- Check if Rust Struct for the file is initialized with a 10 emoji array
+- Check if the string we are writing is utf8 decodable (and decode it - `_RNvNtNtCsfDBl8rBLEEc_4core3str8converts9from_utf8`)
+- Split the string at `-` (`_RNvMsr_NtNtCsfDBl8rBLEEc_4core3str7patternNtB5_11StrSearcher3new`)
+- Zip the split string and the randomly generated emojis
+- Iterate for each emoji (so 10 times):
+- => Get the index of the emoji (from 0 at crab to 5 to dragon "🦀🐧🍋🐸🐱🐉")
+- => Get the current counter (initialized at the beginning at 0)
+- => Calculate `(emoji_index + counter) % 6`
+- => Check if the split string part matches the string table entry at that index (stringArray: `["crab", "penguin", "lemonthink", "msfrog", "af", "dragon"]`)
+- => If it doesn't match: FAIL
+- If all 10 emojis matched their string table entry and `counter == 0xa`: `giveFlag = 1`
+- If all 10 emojis matched their string table entry: `counter = counter + 1`
 
 If `giveFlag` is 1 then reading the device will give us the flag.
 
 So to solve this challenge we need:
-    - Open file to the device
-    - Do 11 Times:
-        - Read 10 Emojis (UTF-8 encoded)
-        - Match them with the `(table+counter)%6` entries
-        - Write them to the device with `-` separators
-    - Read flag
+- Open file to the device
+- Do 11 Times:
+    - Read 10 Emojis (UTF-8 encoded)
+    - Match them with the `(table+counter)%6` entries
+    - Write them to the device with `-` separators
+- Read flag
 
 So writing a program that solves this:
 
@@ -302,15 +303,16 @@ def encrypt(s, a, b):
 
 Inverting this as it is - is quite easy as we just need to invert the linear function in the modulus:
 
-```
+```python
 def decrypt(c, a, b):
     ai = int(pow(a, -1, 0x10001))
     return encrypt(c, ai, (-ai*b)%0x10001)
 ```
 
 Now for some interesting properties of the NTT that we can observe by playing around with it:
-    - `innt(ntt(array) * a) = array * a`
-    - `innt(ntt(array) + b) = [array[0] + b] + array[1:]
+
+- `intt(ntt(array) * a) = array * a`
+- `intt(ntt(array) + b) = [array[0] + b] + array[1:]`
     
 
 ```python
@@ -353,7 +355,7 @@ brute(ciphertext, b'co')
     
 Of course from our observations that `output[i] = (input[i]+b)%0x10001` for `i>1` we can be even smarter and calculate the (a, b) pair directly:
 
-```
+```python
 def solve(ciphertext, plaintext):
     encoded_ciphertext = inputStuff(ciphertext)
     encoded_plaintext_0 = ((plaintext[0]<<8) | plaintext[1])
