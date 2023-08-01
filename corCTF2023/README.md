@@ -353,7 +353,7 @@ brute(ciphertext, b'co')
     b'corctf{i_l0v3_s0lv1ng_nUmb3r_th30r3tic_tR@n5f0rmS!!!}\n\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
     
     
-Of course from our observations that `output[i] = (input[i]+b)%0x10001` for `i>1` we can be even smarter and calculate the (a, b) pair directly:
+Of course from our observations that `output[i] = (input[i]*a)%0x10001` for `i>1` we can be even smarter and calculate the (a, b) pair directly:
 
 ```python
 def solve(ciphertext, plaintext):
