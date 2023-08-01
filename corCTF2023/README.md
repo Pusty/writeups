@@ -39,11 +39,11 @@ Now in the write function what is happening is:
 - Split the string at `-` (`_RNvMsr_NtNtCsfDBl8rBLEEc_4core3str7patternNtB5_11StrSearcher3new`)
 - Zip the split string and the randomly generated emojis
 - Iterate for each emoji (so 10 times):
-- => Get the index of the emoji (from 0 at crab to 5 to dragon "🦀🐧🍋🐸🐱🐉")
-- => Get the current counter (initialized at the beginning at 0)
-- => Calculate `(emoji_index + counter) % 6`
-- => Check if the split string part matches the string table entry at that index (stringArray: `["crab", "penguin", "lemonthink", "msfrog", "af", "dragon"]`)
-- => If it doesn't match: FAIL
+    - Get the index of the emoji (from 0 at crab to 5 to dragon "🦀🐧🍋🐸🐱🐉")
+    - Get the current counter (initialized at the beginning at 0)
+    - Calculate `(emoji_index + counter) % 6`
+    - Check if the split string part matches the string table entry at that index (stringArray: `["crab", "penguin", "lemonthink", "msfrog", "af", "dragon"]`)
+    - If it doesn't match: FAIL
 - If all 10 emojis matched their string table entry and `counter == 0xa`: `giveFlag = 1`
 - If all 10 emojis matched their string table entry: `counter = counter + 1`
 
