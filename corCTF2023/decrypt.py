@@ -69,3 +69,14 @@ def solve(ciphertext, plaintext):
     print((a, b), decrypt_fast(ciphertext, a, b))
     
 solve(ciphertext, b'corc')
+
+def brute_blind(ciphertext):
+    for a in range(1, 2**16+1):
+        b = 0
+        decrypted = decrypt_fast(ciphertext, a, b)
+        
+        if decrypted[2:].isascii():
+            print((a, b), decrypted)
+            
+            
+brute_blind(ciphertext)

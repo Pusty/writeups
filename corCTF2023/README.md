@@ -367,7 +367,21 @@ def solve(ciphertext, plaintext):
 solve(ciphertext, b'corc')
 ```
 
+If we didn't know the likely plaintext then we could also bruteforce a and then just guess the first two characters (as b is only applied to the first short):
 
+```
+def brute_blind(ciphertext):
+    for a in range(1, 2**16+1):
+        b = 0
+        decrypted = decrypt_fast(ciphertext, a, b)
+        
+        if decrypted[2:].isascii():
+            print((a, b), decrypted)
+            
+            
+brute_blind(ciphertext)
+# (20228, 0) b'\xeb\xb0rctf{i_l0v3_s0lv1ng_nUmb3r_th30r3tic_tR@n5f0rmS!!!}\n\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+```
 
 # impossible-maze
 
