@@ -118,7 +118,7 @@ For `i=1` the black bars here demonstrate the cubes that will be rotates (plus a
 
 And here for `i=2`.
 First thing to notice is that `cube[i][i][i]` is only ever getting rotated at index `i`. So the values in the fully "hashed" cube leak information about individual characters.
-Even more so, something my teammate duk noticed (and these images make quite clear) is that for each index we have "subcubes" (going `cube[i-y][i-z][i-x]` for `0 < x,y,z < i+1`) that are never touched again and stay as they are - so in the "hashed" cube we have even more leaked information.
+Even more so, something my teammate [duk](https://nothing-ever.works/@duk) noticed (and these images make quite clear) is that for each index we have "subcubes" (going `cube[i-y][i-z][i-x]` for `0 < x,y,z < i+1`) that are never touched again and stay as they are - so in the "hashed" cube we have even more leaked information.
  
 ```python
 def unhashCube(targetCube, x=0, already="", ln=CUBE_LENGTH):
