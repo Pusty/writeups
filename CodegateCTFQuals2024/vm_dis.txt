@@ -1,0 +1,1064 @@
+L0000 PUSH regs[0]
+L0001 SHR regs[0] = regs[0] >> 0x00000007
+L0002 MOV regs[1] = regs[0]
+L0003 POP regs[0]
+L0004 PUSH regs[0]
+L0005 SHR regs[0] = regs[0] >> 0x00000004
+L0006 MOV regs[21] = regs[0]
+L0007 POP regs[0]
+L0008 PUSH regs[0]
+L0009 SHR regs[0] = regs[0] >> 0x0000000B
+L0010 MOV regs[5] = regs[0]
+L0011 POP regs[0]
+L0012 PUSH regs[0]
+L0013 SHR regs[0] = regs[0] >> 0x0000000C
+L0014 MOV regs[20] = regs[0]
+L0015 POP regs[0]
+L0016 PUSH regs[0]
+L0017 SHR regs[0] = regs[0] >> 0x00000008
+L0018 MOV regs[12] = regs[0]
+L0019 POP regs[0]
+L0020 PUSH regs[0]
+L0021 SHR regs[0] = regs[0] >> 0x0000000F
+L0022 MOV regs[2] = regs[0]
+L0023 POP regs[0]
+L0024 PUSH regs[0]
+L0025 SHR regs[0] = regs[0] >> 0x00000003
+L0026 MOV regs[17] = regs[0]
+L0027 POP regs[0]
+L0028 PUSH regs[0]
+L0029 SHR regs[0] = regs[0] >> 0x00000006
+L0030 MOV regs[18] = regs[0]
+L0031 POP regs[0]
+L0032 PUSH regs[20]
+L0033 XOR regs[20] = regs[20] ^ regs[12]
+L0034 MOV regs[9] = regs[20]
+L0035 POP regs[20]
+L0036 PUSH regs[0]
+L0037 SHR regs[0] = regs[0] >> 0x0000000E
+L0038 MOV regs[10] = regs[0]
+L0039 POP regs[0]
+L0040 PUSH regs[5]
+L0041 XOR regs[5] = regs[5] ^ regs[2]
+L0042 MOV regs[8] = regs[5]
+L0043 POP regs[5]
+L0044 PUSH regs[0]
+L0045 SHR regs[0] = regs[0] >> 0x0000000A
+L0046 MOV regs[11] = regs[0]
+L0047 POP regs[0]
+L0048 XOR regs[5] = regs[5] ^ regs[1]
+L0049 XOR regs[12] = regs[12] ^ regs[21]
+L0050 PUSH regs[0]
+L0051 SHR regs[0] = regs[0] >> 0x00000002
+L0052 MOV regs[4] = regs[0]
+L0053 POP regs[0]
+L0054 PUSH regs[10]
+L0055 XOR regs[10] = regs[10] ^ regs[11]
+L0056 MOV regs[7] = regs[10]
+L0057 POP regs[10]
+L0058 PUSH regs[0]
+L0059 XOR regs[0] = regs[0] ^ regs[12]
+L0060 MOV regs[12] = regs[0]
+L0061 POP regs[0]
+L0062 XOR regs[10] = regs[10] ^ regs[18]
+L0063 PUSH regs[17]
+L0064 XOR regs[17] = regs[17] ^ regs[5]
+L0065 MOV regs[5] = regs[17]
+L0066 POP regs[17]
+L0067 AND regs[12] = regs[12] & 0x00000001
+L0068 PUSH regs[4]
+L0069 XOR regs[4] = regs[4] ^ regs[10]
+L0070 MOV regs[10] = regs[4]
+L0071 POP regs[4]
+L0072 SHL regs[5] = regs[5] << 0x0000000F
+L0073 PUSH regs[0]
+L0074 SHR regs[0] = regs[0] >> 0x0000000D
+L0075 MOV regs[22] = regs[0]
+L0076 POP regs[0]
+L0077 PUSH regs[0]
+L0078 SHR regs[0] = regs[0] >> 0x00000009
+L0079 MOV regs[19] = regs[0]
+L0080 POP regs[0]
+L0081 OR regs[5] = regs[5] | regs[12]
+L0082 SHL regs[10] = regs[10] << 0x0000000E
+L0083 MOV regs[12] = 0x00004000
+L0084 PUSH regs[22]
+L0085 XOR regs[22] = regs[22] ^ regs[19]
+L0086 MOV regs[3] = regs[22]
+L0087 POP regs[22]
+L0088 PUSH regs[0]
+L0089 SHR regs[0] = regs[0] >> 0x00000001
+L0090 MOV regs[16] = regs[0]
+L0091 POP regs[0]
+L0092 AND regs[10] = regs[10] & regs[12]
+L0093 OR regs[5] = regs[5] | regs[10]
+L0094 PUSH regs[3]
+L0095 XOR regs[3] = regs[3] ^ regs[16]
+L0096 MOV regs[10] = regs[3]
+L0097 POP regs[3]
+L0098 MOV regs[12] = 0x00002000
+L0099 SHL regs[10] = regs[10] << 0x0000000D
+L0100 AND regs[10] = regs[10] & regs[12]
+L0101 OR regs[5] = regs[5] | regs[10]
+L0102 PUSH regs[9]
+L0103 XOR regs[9] = regs[9] ^ regs[21]
+L0104 MOV regs[10] = regs[9]
+L0105 POP regs[9]
+L0106 MOV regs[12] = 0x00001000
+L0107 SHL regs[10] = regs[10] << 0x0000000C
+L0108 AND regs[10] = regs[10] & regs[12]
+L0109 OR regs[5] = regs[5] | regs[10]
+L0110 MOV regs[12] = 0x00001000
+L0111 PUSH regs[1]
+L0112 XOR regs[1] = regs[1] ^ regs[8]
+L0113 MOV regs[10] = regs[1]
+L0114 POP regs[1]
+L0115 SUB regs[12] = regs[12] - 0x00000800
+L0116 SHL regs[10] = regs[10] << 0x0000000B
+L0117 AND regs[10] = regs[10] & regs[12]
+L0118 OR regs[5] = regs[5] | regs[10]
+L0119 PUSH regs[18]
+L0120 XOR regs[18] = regs[18] ^ regs[4]
+L0121 MOV regs[10] = regs[18]
+L0122 POP regs[18]
+L0123 PUSH regs[0]
+L0124 SHR regs[0] = regs[0] >> 0x00000005
+L0125 MOV regs[6] = regs[0]
+L0126 POP regs[0]
+L0127 XOR regs[11] = regs[11] ^ regs[10]
+L0128 XOR regs[22] = regs[22] ^ regs[16]
+L0129 SHL regs[11] = regs[11] << 0x0000000A
+L0130 PUSH regs[6]
+L0131 XOR regs[6] = regs[6] ^ regs[22]
+L0132 MOV regs[22] = regs[6]
+L0133 POP regs[6]
+L0134 AND regs[11] = regs[11] & 0x00000400
+L0135 XOR regs[9] = regs[9] ^ regs[0]
+L0136 SHL regs[22] = regs[22] << 0x00000009
+L0137 OR regs[5] = regs[5] | regs[11]
+L0138 AND regs[22] = regs[22] & 0x00000200
+L0139 SHL regs[9] = regs[9] << 0x00000008
+L0140 PUSH regs[17]
+L0141 XOR regs[17] = regs[17] ^ regs[8]
+L0142 MOV regs[8] = regs[17]
+L0143 POP regs[17]
+L0144 AND regs[9] = regs[9] & 0x00000100
+L0145 OR regs[5] = regs[5] | regs[22]
+L0146 SHL regs[8] = regs[8] << 0x00000007
+L0147 XOR regs[18] = regs[18] ^ regs[7]
+L0148 XOR regs[19] = regs[19] ^ regs[16]
+L0149 OR regs[5] = regs[5] | regs[9]
+L0150 AND regs[8] = regs[8] & 0x000000FF
+L0151 SHL regs[18] = regs[18] << 0x00000006
+L0152 PUSH regs[6]
+L0153 XOR regs[6] = regs[6] ^ regs[19]
+L0154 MOV regs[19] = regs[6]
+L0155 POP regs[6]
+L0156 XOR regs[20] = regs[20] ^ regs[21]
+L0157 OR regs[5] = regs[5] | regs[8]
+L0158 AND regs[18] = regs[18] & 0x00000040
+L0159 SHL regs[19] = regs[19] << 0x00000005
+L0160 XOR regs[0] = regs[0] ^ regs[20]
+L0161 OR regs[5] = regs[5] | regs[18]
+L0162 AND regs[19] = regs[19] & 0x00000020
+L0163 SHL regs[0] = regs[0] << 0x00000004
+L0164 OR regs[5] = regs[5] | regs[19]
+L0165 AND regs[0] = regs[0] & 0x00000010
+L0166 PUSH regs[5]
+L0167 OR regs[5] = regs[5] | regs[0]
+L0168 MOV regs[0] = regs[5]
+L0169 POP regs[5]
+L0170 PUSH regs[1]
+L0171 XOR regs[1] = regs[1] ^ regs[17]
+L0172 MOV regs[5] = regs[1]
+L0173 POP regs[1]
+L0174 PUSH regs[2]
+L0175 XOR regs[2] = regs[2] ^ regs[5]
+L0176 MOV regs[5] = regs[2]
+L0177 POP regs[2]
+L0178 SHL regs[5] = regs[5] << 0x00000003
+L0179 XOR regs[4] = regs[4] ^ regs[7]
+L0180 AND regs[5] = regs[5] & 0x00000008
+L0181 SHL regs[4] = regs[4] << 0x00000002
+L0182 XOR regs[3] = regs[3] ^ regs[6]
+L0183 OR regs[0] = regs[0] | regs[5]
+L0184 AND regs[4] = regs[4] & 0x00000004
+L0185 SHL regs[3] = regs[3] << 0x00000001
+L0186 OR regs[0] = regs[0] | regs[4]
+L0187 AND regs[3] = regs[3] & 0x00000002
+L0188 OR regs[0] = regs[0] | regs[3]
+L0189 SHL regs[0] = regs[0] << 0x00000010
+L0190 SHR regs[0] = regs[0] >> 0x00000010
+L0191 RET
+L0192 PUSH regs[0]
+L0193 SHR regs[0] = regs[0] >> 0x0000000F
+L0194 MOV regs[4] = regs[0]
+L0195 POP regs[0]
+L0196 PUSH regs[0]
+L0197 SHR regs[0] = regs[0] >> 0x0000000B
+L0198 MOV regs[7] = regs[0]
+L0199 POP regs[0]
+L0200 PUSH regs[0]
+L0201 SHR regs[0] = regs[0] >> 0x0000000C
+L0202 MOV regs[8] = regs[0]
+L0203 POP regs[0]
+L0204 PUSH regs[0]
+L0205 SHR regs[0] = regs[0] >> 0x00000008
+L0206 MOV regs[21] = regs[0]
+L0207 POP regs[0]
+L0208 PUSH regs[0]
+L0209 SHR regs[0] = regs[0] >> 0x00000007
+L0210 MOV regs[20] = regs[0]
+L0211 POP regs[0]
+L0212 PUSH regs[0]
+L0213 SHR regs[0] = regs[0] >> 0x00000006
+L0214 MOV regs[6] = regs[0]
+L0215 POP regs[0]
+L0216 PUSH regs[8]
+L0217 XOR regs[8] = regs[8] ^ regs[21]
+L0218 MOV regs[12] = regs[8]
+L0219 POP regs[8]
+L0220 PUSH regs[0]
+L0221 SHR regs[0] = regs[0] >> 0x00000004
+L0222 MOV regs[22] = regs[0]
+L0223 POP regs[0]
+L0224 PUSH regs[4]
+L0225 XOR regs[4] = regs[4] ^ regs[7]
+L0226 MOV regs[11] = regs[4]
+L0227 POP regs[4]
+L0228 PUSH regs[0]
+L0229 SHR regs[0] = regs[0] >> 0x0000000A
+L0230 MOV regs[13] = regs[0]
+L0231 POP regs[0]
+L0232 PUSH regs[0]
+L0233 SHR regs[0] = regs[0] >> 0x0000000E
+L0234 MOV regs[1] = regs[0]
+L0235 POP regs[0]
+L0236 PUSH regs[0]
+L0237 SHR regs[0] = regs[0] >> 0x00000002
+L0238 MOV regs[19] = regs[0]
+L0239 POP regs[0]
+L0240 PUSH regs[13]
+L0241 XOR regs[13] = regs[13] ^ regs[1]
+L0242 MOV regs[18] = regs[13]
+L0243 POP regs[13]
+L0244 PUSH regs[11]
+L0245 XOR regs[11] = regs[11] ^ regs[20]
+L0246 MOV regs[5] = regs[11]
+L0247 POP regs[11]
+L0248 PUSH regs[12]
+L0249 XOR regs[12] = regs[12] ^ regs[22]
+L0250 MOV regs[14] = regs[12]
+L0251 POP regs[12]
+L0252 XOR regs[13] = regs[13] ^ regs[6]
+L0253 PUSH regs[0]
+L0254 SHR regs[0] = regs[0] >> 0x00000005
+L0255 MOV regs[16] = regs[0]
+L0256 POP regs[0]
+L0257 PUSH regs[0]
+L0258 SHR regs[0] = regs[0] >> 0x0000000D
+L0259 MOV regs[9] = regs[0]
+L0260 POP regs[0]
+L0261 PUSH regs[0]
+L0262 SHR regs[0] = regs[0] >> 0x00000009
+L0263 MOV regs[10] = regs[0]
+L0264 POP regs[0]
+L0265 AND regs[14] = regs[14] & 0x00000001
+L0266 SHL regs[5] = regs[5] << 0x0000000F
+L0267 PUSH regs[19]
+L0268 XOR regs[19] = regs[19] ^ regs[13]
+L0269 MOV regs[13] = regs[19]
+L0270 POP regs[19]
+L0271 PUSH regs[0]
+L0272 SHR regs[0] = regs[0] >> 0x00000001
+L0273 MOV regs[3] = regs[0]
+L0274 POP regs[0]
+L0275 PUSH regs[9]
+L0276 XOR regs[9] = regs[9] ^ regs[10]
+L0277 MOV regs[17] = regs[9]
+L0278 POP regs[9]
+L0279 OR regs[5] = regs[5] | regs[14]
+L0280 XOR regs[9] = regs[9] ^ regs[16]
+L0281 MOV regs[14] = 0x00004000
+L0282 SHL regs[13] = regs[13] << 0x0000000E
+L0283 AND regs[13] = regs[13] & regs[14]
+L0284 PUSH regs[3]
+L0285 XOR regs[3] = regs[3] ^ regs[9]
+L0286 MOV regs[9] = regs[3]
+L0287 POP regs[3]
+L0288 OR regs[5] = regs[5] | regs[13]
+L0289 SHL regs[9] = regs[9] << 0x0000000D
+L0290 MOV regs[13] = 0x00002000
+L0291 AND regs[9] = regs[9] & regs[13]
+L0292 XOR regs[12] = regs[12] ^ regs[0]
+L0293 PUSH regs[0]
+L0294 SHR regs[0] = regs[0] >> 0x00000003
+L0295 MOV regs[2] = regs[0]
+L0296 POP regs[0]
+L0297 OR regs[5] = regs[5] | regs[9]
+L0298 SHL regs[12] = regs[12] << 0x0000000C
+L0299 MOV regs[9] = 0x00001000
+L0300 AND regs[12] = regs[12] & regs[9]
+L0301 XOR regs[11] = regs[11] ^ regs[2]
+L0302 MOV regs[9] = 0x00001000
+L0303 SUB regs[9] = regs[9] - 0x00000800
+L0304 SHL regs[11] = regs[11] << 0x0000000B
+L0305 AND regs[11] = regs[11] & regs[9]
+L0306 PUSH regs[6]
+L0307 XOR regs[6] = regs[6] ^ regs[18]
+L0308 MOV regs[9] = regs[6]
+L0309 POP regs[6]
+L0310 OR regs[5] = regs[5] | regs[12]
+L0311 SHL regs[9] = regs[9] << 0x0000000A
+L0312 OR regs[5] = regs[5] | regs[11]
+L0313 AND regs[9] = regs[9] & 0x00000400
+L0314 OR regs[5] = regs[5] | regs[9]
+L0315 PUSH regs[16]
+L0316 XOR regs[16] = regs[16] ^ regs[3]
+L0317 MOV regs[9] = regs[16]
+L0318 POP regs[16]
+L0319 XOR regs[10] = regs[10] ^ regs[9]
+L0320 XOR regs[8] = regs[8] ^ regs[22]
+L0321 PUSH regs[0]
+L0322 XOR regs[0] = regs[0] ^ regs[8]
+L0323 MOV regs[8] = regs[0]
+L0324 POP regs[0]
+L0325 SHL regs[10] = regs[10] << 0x00000009
+L0326 XOR regs[4] = regs[4] ^ regs[20]
+L0327 AND regs[10] = regs[10] & 0x00000200
+L0328 SHL regs[8] = regs[8] << 0x00000008
+L0329 PUSH regs[2]
+L0330 XOR regs[2] = regs[2] ^ regs[4]
+L0331 MOV regs[4] = regs[2]
+L0332 POP regs[2]
+L0333 OR regs[5] = regs[5] | regs[10]
+L0334 AND regs[8] = regs[8] & 0x00000100
+L0335 SHL regs[4] = regs[4] << 0x00000007
+L0336 PUSH regs[19]
+L0337 XOR regs[19] = regs[19] ^ regs[18]
+L0338 MOV regs[18] = regs[19]
+L0339 POP regs[19]
+L0340 OR regs[5] = regs[5] | regs[8]
+L0341 AND regs[4] = regs[4] & 0x000000FF
+L0342 SHL regs[18] = regs[18] << 0x00000006
+L0343 XOR regs[16] = regs[16] ^ regs[17]
+L0344 XOR regs[21] = regs[21] ^ regs[22]
+L0345 OR regs[5] = regs[5] | regs[4]
+L0346 AND regs[18] = regs[18] & 0x00000040
+L0347 SHL regs[16] = regs[16] << 0x00000005
+L0348 XOR regs[0] = regs[0] ^ regs[21]
+L0349 OR regs[5] = regs[5] | regs[18]
+L0350 AND regs[16] = regs[16] & 0x00000020
+L0351 SHL regs[0] = regs[0] << 0x00000004
+L0352 OR regs[5] = regs[5] | regs[16]
+L0353 AND regs[0] = regs[0] & 0x00000010
+L0354 PUSH regs[5]
+L0355 OR regs[5] = regs[5] | regs[0]
+L0356 MOV regs[0] = regs[5]
+L0357 POP regs[5]
+L0358 PUSH regs[7]
+L0359 XOR regs[7] = regs[7] ^ regs[20]
+L0360 MOV regs[5] = regs[7]
+L0361 POP regs[7]
+L0362 PUSH regs[2]
+L0363 XOR regs[2] = regs[2] ^ regs[5]
+L0364 MOV regs[5] = regs[2]
+L0365 POP regs[2]
+L0366 SHL regs[5] = regs[5] << 0x00000003
+L0367 AND regs[5] = regs[5] & 0x00000008
+L0368 OR regs[0] = regs[0] | regs[5]
+L0369 PUSH regs[6]
+L0370 XOR regs[6] = regs[6] ^ regs[19]
+L0371 MOV regs[5] = regs[6]
+L0372 POP regs[6]
+L0373 PUSH regs[1]
+L0374 XOR regs[1] = regs[1] ^ regs[5]
+L0375 MOV regs[5] = regs[1]
+L0376 POP regs[1]
+L0377 SHL regs[5] = regs[5] << 0x00000002
+L0378 XOR regs[3] = regs[3] ^ regs[17]
+L0379 AND regs[5] = regs[5] & 0x00000004
+L0380 SHL regs[3] = regs[3] << 0x00000001
+L0381 OR regs[0] = regs[0] | regs[5]
+L0382 AND regs[3] = regs[3] & 0x00000002
+L0383 OR regs[0] = regs[0] | regs[3]
+L0384 SHL regs[0] = regs[0] << 0x00000010
+L0385 SHR regs[0] = regs[0] >> 0x00000010
+L0386 RET
+L0387 MOV regs[11] = regs[0]
+L0388 PUSH regs[1]
+L0389 SHR regs[1] = regs[1] >> 0x00000010
+L0390 MOV regs[0] = regs[1]
+L0391 POP regs[1]
+L0392 PUSHAD_ExceptR0R1
+L0393 PUSH regs[1]
+L0394 CALL L0000
+L0395 POP regs[1]
+L0396 POPAD_ExceptR0R1
+L0397 MOV regs[10] = regs[0]
+L0398 PUSH regs[1]
+L0399 SHL regs[1] = regs[1] << 0x00000010
+L0400 MOV regs[0] = regs[1]
+L0401 POP regs[1]
+L0402 SHR regs[0] = regs[0] >> 0x00000010
+L0403 PUSHAD_ExceptR0R1
+L0404 CALL L0192
+L0405 POPAD_ExceptR0R1
+L0406 MOV regs[9] = regs[0]
+L0407 PUSH regs[11]
+L0408 SHR regs[11] = regs[11] >> 0x00000010
+L0409 MOV regs[0] = regs[11]
+L0410 POP regs[11]
+L0411 PUSHAD_ExceptR0R1
+L0412 CALL L0192
+L0413 POPAD_ExceptR0R1
+L0414 MOV regs[8] = regs[0]
+L0415 PUSH regs[11]
+L0416 SHL regs[11] = regs[11] << 0x00000010
+L0417 MOV regs[0] = regs[11]
+L0418 POP regs[11]
+L0419 SHR regs[0] = regs[0] >> 0x00000010
+L0420 PUSHAD_ExceptR0R1
+L0421 CALL L0000
+L0422 POPAD_ExceptR0R1
+L0423 PUSH regs[8]
+L0424 SHR regs[8] = regs[8] >> 0x00000010
+L0425 MOV regs[1] = regs[8]
+L0426 POP regs[8]
+L0427 SHL regs[8] = regs[8] << 0x00000010
+L0428 OR regs[0] = regs[0] | regs[8]
+L0429 PUSH regs[10]
+L0430 SHL regs[10] = regs[10] << 0x00000010
+L0431 MOV regs[5] = regs[10]
+L0432 POP regs[10]
+L0433 PUSH regs[9]
+L0434 OR regs[9] = regs[9] | regs[5]
+L0435 MOV regs[5] = regs[9]
+L0436 POP regs[9]
+L0437 PUSH regs[5]
+L0438 OR regs[5] = regs[5] | regs[1]
+L0439 MOV regs[1] = regs[5]
+L0440 POP regs[5]
+L0441 RET
+L0442 SET_FLAGS regs[2] == 0x00000000
+L0443 JNE L0445
+L0444 RET
+L0445 SET_FLAGS regs[2] == 0x00000040
+L0446 JL L0450
+L0447 MOV regs[0] = 0x00000000
+L0448 MOV regs[1] = 0x00000000
+L0449 RET
+L0450 SET_FLAGS regs[2] == 0x00000020
+L0451 JL L0453
+L0452 JMP L0469
+L0453 PUSH regs[1]
+L0454 SHL regs[1] = regs[1] << regs[2]
+L0455 MOV regs[8] = regs[1]
+L0456 POP regs[1]
+L0457 MOV regs[10] = 0x00000020
+L0458 SUB regs[10] = regs[10] - regs[2]
+L0459 PUSH regs[0]
+L0460 SHR regs[0] = regs[0] >> regs[2]
+L0461 MOV regs[9] = regs[0]
+L0462 POP regs[0]
+L0463 PUSH regs[8]
+L0464 OR regs[8] = regs[8] | regs[9]
+L0465 MOV regs[1] = regs[8]
+L0466 POP regs[8]
+L0467 SHL regs[0] = regs[0] << regs[2]
+L0468 RET
+L0469 PUSH regs[2]
+L0470 SUB regs[2] = regs[2] - 0x00000020
+L0471 MOV regs[8] = regs[2]
+L0472 POP regs[2]
+L0473 PUSH regs[0]
+L0474 SHL regs[0] = regs[0] << regs[8]
+L0475 MOV regs[1] = regs[0]
+L0476 POP regs[0]
+L0477 MOV regs[0] = 0x00000000
+L0478 RET
+L0479 SET_FLAGS regs[2] == 0x00000000
+L0480 JNE L0482
+L0481 RET
+L0482 SET_FLAGS regs[2] == 0x00000040
+L0483 JL L0487
+L0484 MOV regs[0] = 0x00000000
+L0485 MOV regs[1] = 0x00000000
+L0486 RET
+L0487 SET_FLAGS regs[2] == 0x00000020
+L0488 JL L0490
+L0489 JMP L0506
+L0490 PUSH regs[0]
+L0491 SHR regs[0] = regs[0] >> regs[2]
+L0492 MOV regs[8] = regs[0]
+L0493 POP regs[0]
+L0494 MOV regs[10] = 0x00000020
+L0495 SUB regs[10] = regs[10] - regs[2]
+L0496 PUSH regs[1]
+L0497 SHL regs[1] = regs[1] << regs[10]
+L0498 MOV regs[9] = regs[1]
+L0499 POP regs[1]
+L0500 PUSH regs[8]
+L0501 OR regs[8] = regs[8] | regs[9]
+L0502 MOV regs[0] = regs[8]
+L0503 POP regs[8]
+L0504 SHR regs[1] = regs[1] >> regs[2]
+L0505 RET
+L0506 PUSH regs[2]
+L0507 SUB regs[2] = regs[2] - 0x00000020
+L0508 MOV regs[8] = regs[2]
+L0509 POP regs[2]
+L0510 PUSH regs[1]
+L0511 SHR regs[1] = regs[1] >> regs[8]
+L0512 MOV regs[0] = regs[1]
+L0513 POP regs[1]
+L0514 MOV regs[1] = 0x00000000
+L0515 RET
+L0516 MOV regs[14] = regs[0]
+L0517 MOV regs[15] = regs[1]
+L0518 MOV regs[12] = regs[2]
+L0519 MOV regs[8] = 0x00000000
+L0520 MOV regs[10] = 0x00000000
+L0521 MOV regs[9] = 0x00000000
+L0522 MOV regs[11] = 0x00000040
+L0523 MOV regs[2] = regs[8]
+L0524 MOV regs[0] = regs[14]
+L0525 MOV regs[1] = regs[15]
+L0526 PUSHAD_ExceptR0R1
+L0527 CALL L0479
+L0528 POPAD_ExceptR0R1
+L0529 AND regs[0] = regs[0] & 0x0000000F
+L0530 ADD regs[0] = regs[0] + regs[12]
+L0531 MOV regs[0] = memory[regs[0]]
+L0532 MOV regs[2] = regs[8]
+L0533 MOV regs[1] = 0x00000000
+L0534 PUSHAD_ExceptR0R1
+L0535 CALL L0442
+L0536 POPAD_ExceptR0R1
+L0537 ADD regs[8] = regs[8] + 0x00000004
+L0538 OR regs[10] = regs[10] | regs[0]
+L0539 OR regs[9] = regs[9] | regs[1]
+L0540 SET_FLAGS regs[8] == regs[11]
+L0541 JNE L0523
+L0542 MOV regs[0] = regs[10]
+L0543 MOV regs[1] = regs[9]
+L0544 RET
+L0545 PUSH regs[1]
+L0546 SHR regs[1] = regs[1] >> 0x0000001C
+L0547 MOV regs[5] = regs[1]
+L0548 POP regs[1]
+L0549 SHL regs[5] = regs[5] << 0x00000014
+L0550 PUSH regs[1]
+L0551 SHR regs[1] = regs[1] >> 0x00000018
+L0552 MOV regs[4] = regs[1]
+L0553 POP regs[1]
+L0554 AND regs[4] = regs[4] & 0x0000000F
+L0555 PUSH regs[1]
+L0556 SHR regs[1] = regs[1] >> 0x00000004
+L0557 MOV regs[3] = regs[1]
+L0558 POP regs[1]
+L0559 SHL regs[3] = regs[3] << 0x0000001C
+L0560 OR regs[5] = regs[5] | regs[3]
+L0561 PUSH regs[0]
+L0562 SHL regs[0] = regs[0] << 0x00000008
+L0563 MOV regs[2] = regs[0]
+L0564 POP regs[0]
+L0565 MOV regs[3] = 0x00001000
+L0566 SUB regs[3] = regs[3] - 0x00000100
+L0567 AND regs[2] = regs[2] & regs[3]
+L0568 OR regs[5] = regs[5] | regs[2]
+L0569 PUSH regs[1]
+L0570 SHR regs[1] = regs[1] >> 0x00000008
+L0571 MOV regs[2] = regs[1]
+L0572 POP regs[1]
+L0573 MOV regs[6] = 0x0000F000
+L0574 AND regs[2] = regs[2] & regs[6]
+L0575 OR regs[4] = regs[4] | regs[2]
+L0576 PUSH regs[1]
+L0577 SHL regs[1] = regs[1] << 0x00000008
+L0578 MOV regs[2] = regs[1]
+L0579 POP regs[1]
+L0580 MOV regs[7] = 0x0F000000
+L0581 AND regs[2] = regs[2] & regs[7]
+L0582 OR regs[4] = regs[4] | regs[2]
+L0583 PUSH regs[1]
+L0584 SHR regs[1] = regs[1] >> 0x00000008
+L0585 MOV regs[2] = regs[1]
+L0586 POP regs[1]
+L0587 AND regs[2] = regs[2] & 0x000000F0
+L0588 OR regs[5] = regs[5] | regs[2]
+L0589 PUSH regs[1]
+L0590 SHL regs[1] = regs[1] << 0x00000008
+L0591 MOV regs[2] = regs[1]
+L0592 POP regs[1]
+L0593 MOV regs[6] = 0x000F0000
+L0594 AND regs[2] = regs[2] & regs[6]
+L0595 OR regs[5] = regs[5] | regs[2]
+L0596 PUSH regs[1]
+L0597 SHL regs[1] = regs[1] << 0x00000008
+L0598 MOV regs[2] = regs[1]
+L0599 POP regs[1]
+L0600 AND regs[3] = regs[3] & regs[2]
+L0601 OR regs[4] = regs[4] | regs[3]
+L0602 PUSH regs[1]
+L0603 SHL regs[1] = regs[1] << 0x00000004
+L0604 MOV regs[2] = regs[1]
+L0605 POP regs[1]
+L0606 PUSH regs[0]
+L0607 SHR regs[0] = regs[0] >> 0x0000001C
+L0608 MOV regs[3] = regs[0]
+L0609 POP regs[0]
+L0610 OR regs[3] = regs[3] | regs[2]
+L0611 SHL regs[3] = regs[3] << 0x00000014
+L0612 MOV regs[2] = 0x00F00000
+L0613 AND regs[3] = regs[3] & regs[2]
+L0614 OR regs[4] = regs[4] | regs[3]
+L0615 PUSH regs[0]
+L0616 SHR regs[0] = regs[0] >> 0x00000018
+L0617 MOV regs[2] = regs[0]
+L0618 POP regs[0]
+L0619 AND regs[2] = regs[2] & 0x0000000F
+L0620 OR regs[5] = regs[5] | regs[2]
+L0621 SHL regs[1] = regs[1] << 0x0000000C
+L0622 PUSH regs[0]
+L0623 SHR regs[0] = regs[0] >> 0x00000014
+L0624 MOV regs[3] = regs[0]
+L0625 POP regs[0]
+L0626 OR regs[3] = regs[3] | regs[1]
+L0627 SHL regs[3] = regs[3] << 0x0000000C
+L0628 MOV regs[2] = 0x0000F000
+L0629 AND regs[3] = regs[3] & regs[2]
+L0630 OR regs[5] = regs[5] | regs[3]
+L0631 PUSH regs[0]
+L0632 SHL regs[0] = regs[0] << 0x00000008
+L0633 MOV regs[1] = regs[0]
+L0634 POP regs[0]
+L0635 AND regs[1] = regs[1] & regs[7]
+L0636 PUSH regs[0]
+L0637 SHR regs[0] = regs[0] >> 0x00000008
+L0638 MOV regs[2] = regs[0]
+L0639 POP regs[0]
+L0640 AND regs[2] = regs[2] & 0x000000F0
+L0641 OR regs[4] = regs[4] | regs[2]
+L0642 PUSH regs[0]
+L0643 SHL regs[0] = regs[0] << 0x00000008
+L0644 MOV regs[3] = regs[0]
+L0645 POP regs[0]
+L0646 AND regs[3] = regs[3] & regs[6]
+L0647 OR regs[4] = regs[4] | regs[3]
+L0648 SHR regs[0] = regs[0] >> 0x00000004
+L0649 SHL regs[0] = regs[0] << 0x0000001C
+L0650 OR regs[0] = regs[0] | regs[4]
+L0651 OR regs[1] = regs[1] | regs[5]
+L0652 RET
+L0653 PUSH regs[1]
+L0654 SHR regs[1] = regs[1] >> 0x0000001C
+L0655 MOV regs[5] = regs[1]
+L0656 POP regs[1]
+L0657 SHL regs[5] = regs[5] << 0x00000014
+L0658 PUSH regs[1]
+L0659 SHR regs[1] = regs[1] >> 0x00000004
+L0660 MOV regs[4] = regs[1]
+L0661 POP regs[1]
+L0662 SHL regs[4] = regs[4] << 0x0000001C
+L0663 OR regs[5] = regs[5] | regs[4]
+L0664 PUSH regs[1]
+L0665 SHL regs[1] = regs[1] << 0x00000008
+L0666 MOV regs[2] = regs[1]
+L0667 POP regs[1]
+L0668 PUSH regs[0]
+L0669 SHR regs[0] = regs[0] >> 0x00000018
+L0670 MOV regs[4] = regs[0]
+L0671 POP regs[0]
+L0672 PUSH regs[1]
+L0673 SHR regs[1] = regs[1] >> 0x00000018
+L0674 MOV regs[6] = regs[1]
+L0675 POP regs[1]
+L0676 AND regs[4] = regs[4] & 0x0000000F
+L0677 PUSH regs[0]
+L0678 SHL regs[0] = regs[0] << 0x00000008
+L0679 MOV regs[7] = regs[0]
+L0680 POP regs[0]
+L0681 MOV regs[3] = 0x00001000
+L0682 SUB regs[3] = regs[3] - 0x00000100
+L0683 AND regs[7] = regs[7] & regs[3]
+L0684 OR regs[4] = regs[4] | regs[7]
+L0685 AND regs[6] = regs[6] & 0x0000000F
+L0686 OR regs[5] = regs[5] | regs[6]
+L0687 PUSH regs[1]
+L0688 SHR regs[1] = regs[1] >> 0x00000008
+L0689 MOV regs[6] = regs[1]
+L0690 POP regs[1]
+L0691 MOV regs[7] = 0x0000F000
+L0692 AND regs[6] = regs[6] & regs[7]
+L0693 OR regs[4] = regs[4] | regs[6]
+L0694 MOV regs[17] = 0x0F000000
+L0695 PUSH regs[2]
+L0696 AND regs[2] = regs[2] & regs[17]
+L0697 MOV regs[6] = regs[2]
+L0698 POP regs[2]
+L0699 OR regs[5] = regs[5] | regs[6]
+L0700 PUSH regs[1]
+L0701 SHR regs[1] = regs[1] >> 0x00000008
+L0702 MOV regs[6] = regs[1]
+L0703 POP regs[1]
+L0704 AND regs[6] = regs[6] & 0x000000F0
+L0705 OR regs[5] = regs[5] | regs[6]
+L0706 MOV regs[6] = 0x000F0000
+L0707 PUSH regs[2]
+L0708 AND regs[2] = regs[2] & regs[6]
+L0709 MOV regs[7] = regs[2]
+L0710 POP regs[2]
+L0711 OR regs[4] = regs[4] | regs[7]
+L0712 AND regs[3] = regs[3] & regs[2]
+L0713 OR regs[5] = regs[5] | regs[3]
+L0714 PUSH regs[1]
+L0715 SHL regs[1] = regs[1] << 0x00000004
+L0716 MOV regs[2] = regs[1]
+L0717 POP regs[1]
+L0718 PUSH regs[0]
+L0719 SHR regs[0] = regs[0] >> 0x0000001C
+L0720 MOV regs[3] = regs[0]
+L0721 POP regs[0]
+L0722 OR regs[3] = regs[3] | regs[2]
+L0723 SHL regs[3] = regs[3] << 0x00000014
+L0724 MOV regs[2] = 0x00F00000
+L0725 AND regs[3] = regs[3] & regs[2]
+L0726 OR regs[4] = regs[4] | regs[3]
+L0727 SHL regs[1] = regs[1] << 0x0000000C
+L0728 PUSH regs[0]
+L0729 SHR regs[0] = regs[0] >> 0x00000014
+L0730 MOV regs[3] = regs[0]
+L0731 POP regs[0]
+L0732 OR regs[3] = regs[3] | regs[1]
+L0733 SHL regs[3] = regs[3] << 0x0000000C
+L0734 MOV regs[2] = 0x0000F000
+L0735 AND regs[3] = regs[3] & regs[2]
+L0736 OR regs[5] = regs[5] | regs[3]
+L0737 PUSH regs[0]
+L0738 SHL regs[0] = regs[0] << 0x00000008
+L0739 MOV regs[3] = regs[0]
+L0740 POP regs[0]
+L0741 AND regs[3] = regs[3] & regs[17]
+L0742 OR regs[4] = regs[4] | regs[3]
+L0743 PUSH regs[0]
+L0744 SHR regs[0] = regs[0] >> 0x00000008
+L0745 MOV regs[3] = regs[0]
+L0746 POP regs[0]
+L0747 AND regs[3] = regs[3] & 0x000000F0
+L0748 OR regs[4] = regs[4] | regs[3]
+L0749 PUSH regs[0]
+L0750 SHL regs[0] = regs[0] << 0x00000008
+L0751 MOV regs[1] = regs[0]
+L0752 POP regs[0]
+L0753 AND regs[1] = regs[1] & regs[6]
+L0754 SHR regs[0] = regs[0] >> 0x00000004
+L0755 SHL regs[0] = regs[0] << 0x0000001C
+L0756 OR regs[0] = regs[0] | regs[4]
+L0757 OR regs[1] = regs[1] | regs[5]
+L0758 RET
+L0759 MOV regs[10] = regs[2]
+L0760 MOV regs[12] = regs[3]
+L0761 MOV regs[9] = regs[4]
+L0762 MOV regs[8] = regs[5]
+L0763 XOR regs[0] = regs[0] ^ regs[4]
+L0764 XOR regs[1] = regs[1] ^ regs[5]
+L0765 XOR regs[0] = regs[0] ^ regs[10]
+L0766 XOR regs[1] = regs[1] ^ regs[3]
+L0767 MOV regs[2] = 0x00000000
+L0768 PUSHAD_ExceptR0R1
+L0769 CALL L0516
+L0770 POPAD_ExceptR0R1
+L0771 PUSHAD_ExceptR0R1
+L0772 CALL L0387
+L0773 POPAD_ExceptR0R1
+L0774 PUSHAD_ExceptR0R1
+L0775 CALL L0545
+L0776 POPAD_ExceptR0R1
+L0777 PUSH regs[9]
+L0778 XOR regs[9] = regs[9] ^ regs[0]
+L0779 MOV regs[16] = regs[9]
+L0780 POP regs[9]
+L0781 PUSH regs[8]
+L0782 XOR regs[8] = regs[8] ^ regs[1]
+L0783 MOV regs[17] = regs[8]
+L0784 POP regs[8]
+L0785 PUSH regs[16]
+L0786 XOR regs[16] = regs[16] ^ 0x03707344
+L0787 MOV regs[0] = regs[16]
+L0788 POP regs[16]
+L0789 PUSH regs[17]
+L0790 XOR regs[17] = regs[17] ^ 0x13198A2E
+L0791 MOV regs[1] = regs[17]
+L0792 POP regs[17]
+L0793 PUSHAD_ExceptR0R1
+L0794 CALL L0516
+L0795 POPAD_ExceptR0R1
+L0796 PUSHAD_ExceptR0R1
+L0797 CALL L0387
+L0798 POPAD_ExceptR0R1
+L0799 PUSHAD_ExceptR0R1
+L0800 CALL L0545
+L0801 POPAD_ExceptR0R1
+L0802 PUSH regs[9]
+L0803 XOR regs[9] = regs[9] ^ regs[0]
+L0804 MOV regs[6] = regs[9]
+L0805 POP regs[9]
+L0806 PUSH regs[8]
+L0807 XOR regs[8] = regs[8] ^ regs[1]
+L0808 MOV regs[7] = regs[8]
+L0809 POP regs[8]
+L0810 PUSH regs[6]
+L0811 XOR regs[6] = regs[6] ^ 0x299F31D0
+L0812 MOV regs[0] = regs[6]
+L0813 POP regs[6]
+L0814 PUSH regs[7]
+L0815 XOR regs[7] = regs[7] ^ 0xA4093822
+L0816 MOV regs[1] = regs[7]
+L0817 POP regs[7]
+L0818 MOV regs[2] = 0x00000000
+L0819 PUSHAD_ExceptR0R1
+L0820 CALL L0516
+L0821 POPAD_ExceptR0R1
+L0822 PUSHAD_ExceptR0R1
+L0823 CALL L0387
+L0824 POPAD_ExceptR0R1
+L0825 PUSHAD_ExceptR0R1
+L0826 CALL L0545
+L0827 POPAD_ExceptR0R1
+L0828 XOR regs[0] = regs[0] ^ regs[9]
+L0829 XOR regs[1] = regs[1] ^ regs[8]
+L0830 XOR regs[0] = regs[0] ^ 0xEC4E6C89
+L0831 XOR regs[1] = regs[1] ^ 0x082EFA98
+L0832 MOV regs[2] = 0x00000000
+L0833 PUSHAD_ExceptR0R1
+L0834 CALL L0516
+L0835 POPAD_ExceptR0R1
+L0836 PUSHAD_ExceptR0R1
+L0837 CALL L0387
+L0838 POPAD_ExceptR0R1
+L0839 PUSHAD_ExceptR0R1
+L0840 CALL L0545
+L0841 POPAD_ExceptR0R1
+L0842 PUSH regs[9]
+L0843 XOR regs[9] = regs[9] ^ regs[0]
+L0844 MOV regs[3] = regs[9]
+L0845 POP regs[9]
+L0846 PUSH regs[8]
+L0847 XOR regs[8] = regs[8] ^ regs[1]
+L0848 MOV regs[4] = regs[8]
+L0849 POP regs[8]
+L0850 PUSH regs[3]
+L0851 XOR regs[3] = regs[3] ^ 0x38D01377
+L0852 MOV regs[0] = regs[3]
+L0853 POP regs[3]
+L0854 PUSH regs[4]
+L0855 XOR regs[4] = regs[4] ^ 0x452821E6
+L0856 MOV regs[1] = regs[4]
+L0857 POP regs[4]
+L0858 MOV regs[2] = 0x00000000
+L0859 PUSHAD_ExceptR0R1
+L0860 CALL L0516
+L0861 POPAD_ExceptR0R1
+L0862 PUSHAD_ExceptR0R1
+L0863 CALL L0387
+L0864 POPAD_ExceptR0R1
+L0865 PUSHAD_ExceptR0R1
+L0866 CALL L0545
+L0867 POPAD_ExceptR0R1
+L0868 PUSH regs[9]
+L0869 XOR regs[9] = regs[9] ^ regs[0]
+L0870 MOV regs[21] = regs[9]
+L0871 POP regs[9]
+L0872 PUSH regs[8]
+L0873 XOR regs[8] = regs[8] ^ regs[1]
+L0874 MOV regs[22] = regs[8]
+L0875 POP regs[8]
+L0876 PUSH regs[21]
+L0877 XOR regs[21] = regs[21] ^ 0x34E90C6C
+L0878 MOV regs[0] = regs[21]
+L0879 POP regs[21]
+L0880 PUSH regs[22]
+L0881 XOR regs[22] = regs[22] ^ 0xBE5466CF
+L0882 MOV regs[1] = regs[22]
+L0883 POP regs[22]
+L0884 MOV regs[2] = 0x00000000
+L0885 PUSHAD_ExceptR0R1
+L0886 CALL L0516
+L0887 POPAD_ExceptR0R1
+L0888 PUSHAD_ExceptR0R1
+L0889 CALL L0387
+L0890 POPAD_ExceptR0R1
+L0891 MOV regs[2] = 0x00000010
+L0892 PUSHAD_ExceptR0R1
+L0893 CALL L0516
+L0894 POPAD_ExceptR0R1
+L0895 PUSH regs[9]
+L0896 XOR regs[9] = regs[9] ^ regs[0]
+L0897 MOV regs[2] = regs[9]
+L0898 POP regs[9]
+L0899 PUSH regs[8]
+L0900 XOR regs[8] = regs[8] ^ regs[1]
+L0901 MOV regs[17] = regs[8]
+L0902 POP regs[8]
+L0903 PUSH regs[2]
+L0904 XOR regs[2] = regs[2] ^ 0xFD955CB1
+L0905 MOV regs[0] = regs[2]
+L0906 POP regs[2]
+L0907 PUSH regs[17]
+L0908 XOR regs[17] = regs[17] ^ 0x7EF84F78
+L0909 MOV regs[1] = regs[17]
+L0910 POP regs[17]
+L0911 PUSHAD_ExceptR0R1
+L0912 CALL L0653
+L0913 POPAD_ExceptR0R1
+L0914 PUSHAD_ExceptR0R1
+L0915 CALL L0387
+L0916 POPAD_ExceptR0R1
+L0917 MOV regs[2] = 0x00000010
+L0918 PUSHAD_ExceptR0R1
+L0919 CALL L0516
+L0920 POPAD_ExceptR0R1
+L0921 PUSH regs[9]
+L0922 XOR regs[9] = regs[9] ^ regs[0]
+L0923 MOV regs[6] = regs[9]
+L0924 POP regs[9]
+L0925 PUSH regs[8]
+L0926 XOR regs[8] = regs[8] ^ regs[1]
+L0927 MOV regs[7] = regs[8]
+L0928 POP regs[8]
+L0929 PUSH regs[6]
+L0930 XOR regs[6] = regs[6] ^ 0xF1AC43AA
+L0931 MOV regs[0] = regs[6]
+L0932 POP regs[6]
+L0933 PUSH regs[7]
+L0934 XOR regs[7] = regs[7] ^ 0x85840851
+L0935 MOV regs[1] = regs[7]
+L0936 POP regs[7]
+L0937 PUSHAD_ExceptR0R1
+L0938 CALL L0653
+L0939 POPAD_ExceptR0R1
+L0940 PUSHAD_ExceptR0R1
+L0941 CALL L0387
+L0942 POPAD_ExceptR0R1
+L0943 MOV regs[2] = 0x00000010
+L0944 PUSHAD_ExceptR0R1
+L0945 CALL L0516
+L0946 POPAD_ExceptR0R1
+L0947 PUSH regs[9]
+L0948 XOR regs[9] = regs[9] ^ regs[0]
+L0949 MOV regs[13] = regs[9]
+L0950 POP regs[9]
+L0951 XOR regs[1] = regs[1] ^ regs[8]
+L0952 PUSH regs[13]
+L0953 XOR regs[13] = regs[13] ^ 0x25323C54
+L0954 MOV regs[0] = regs[13]
+L0955 POP regs[13]
+L0956 XOR regs[1] = regs[1] ^ 0xC882D32F
+L0957 PUSHAD_ExceptR0R1
+L0958 CALL L0653
+L0959 POPAD_ExceptR0R1
+L0960 PUSHAD_ExceptR0R1
+L0961 CALL L0387
+L0962 POPAD_ExceptR0R1
+L0963 MOV regs[2] = 0x00000010
+L0964 PUSHAD_ExceptR0R1
+L0965 CALL L0516
+L0966 POPAD_ExceptR0R1
+L0967 PUSH regs[9]
+L0968 XOR regs[9] = regs[9] ^ regs[0]
+L0969 MOV regs[18] = regs[9]
+L0970 POP regs[9]
+L0971 PUSH regs[8]
+L0972 XOR regs[8] = regs[8] ^ regs[1]
+L0973 MOV regs[3] = regs[8]
+L0974 POP regs[8]
+L0975 PUSH regs[18]
+L0976 XOR regs[18] = regs[18] ^ 0xE0E3610D
+L0977 MOV regs[0] = regs[18]
+L0978 POP regs[18]
+L0979 PUSH regs[3]
+L0980 XOR regs[3] = regs[3] ^ 0x64A51195
+L0981 MOV regs[1] = regs[3]
+L0982 POP regs[3]
+L0983 PUSHAD_ExceptR0R1
+L0984 CALL L0653
+L0985 POPAD_ExceptR0R1
+L0986 PUSHAD_ExceptR0R1
+L0987 CALL L0387
+L0988 POPAD_ExceptR0R1
+L0989 MOV regs[2] = 0x00000010
+L0990 PUSHAD_ExceptR0R1
+L0991 CALL L0516
+L0992 POPAD_ExceptR0R1
+L0993 PUSH regs[9]
+L0994 XOR regs[9] = regs[9] ^ regs[0]
+L0995 MOV regs[19] = regs[9]
+L0996 POP regs[9]
+L0997 PUSH regs[8]
+L0998 XOR regs[8] = regs[8] ^ regs[1]
+L0999 MOV regs[20] = regs[8]
+L1000 POP regs[8]
+L1001 PUSH regs[19]
+L1002 XOR regs[19] = regs[19] ^ 0xCA0C2399
+L1003 MOV regs[0] = regs[19]
+L1004 POP regs[19]
+L1005 PUSH regs[20]
+L1006 XOR regs[20] = regs[20] ^ 0xD3B5A399
+L1007 MOV regs[1] = regs[20]
+L1008 POP regs[20]
+L1009 PUSHAD_ExceptR0R1
+L1010 CALL L0653
+L1011 POPAD_ExceptR0R1
+L1012 PUSHAD_ExceptR0R1
+L1013 CALL L0387
+L1014 POPAD_ExceptR0R1
+L1015 MOV regs[2] = 0x00000010
+L1016 PUSHAD_ExceptR0R1
+L1017 CALL L0516
+L1018 POPAD_ExceptR0R1
+L1019 PUSH regs[12]
+L1020 SHL regs[12] = regs[12] << 0x0000001F
+L1021 MOV regs[11] = regs[12]
+L1022 POP regs[12]
+L1023 PUSH regs[10]
+L1024 SHR regs[10] = regs[10] >> 0x00000001
+L1025 MOV regs[16] = regs[10]
+L1026 POP regs[10]
+L1027 PUSH regs[11]
+L1028 OR regs[11] = regs[11] | regs[16]
+L1029 MOV regs[2] = regs[11]
+L1030 POP regs[11]
+L1031 SHL regs[10] = regs[10] << 0x0000001F
+L1032 PUSH regs[12]
+L1033 SHR regs[12] = regs[12] >> 0x00000001
+L1034 MOV regs[17] = regs[12]
+L1035 POP regs[12]
+L1036 PUSH regs[10]
+L1037 OR regs[10] = regs[10] | regs[17]
+L1038 MOV regs[18] = regs[10]
+L1039 POP regs[10]
+L1040 XOR regs[9] = regs[9] ^ regs[0]
+L1041 XOR regs[8] = regs[8] ^ regs[1]
+L1042 PUSH regs[2]
+L1043 XOR regs[2] = regs[2] ^ regs[9]
+L1044 MOV regs[0] = regs[2]
+L1045 POP regs[2]
+L1046 PUSH regs[18]
+L1047 XOR regs[18] = regs[18] ^ regs[8]
+L1048 MOV regs[3] = regs[18]
+L1049 POP regs[18]
+L1050 SHR regs[12] = regs[12] >> 0x0000001F
+L1051 PUSH regs[0]
+L1052 XOR regs[0] = regs[0] ^ regs[12]
+L1053 MOV regs[4] = regs[0]
+L1054 POP regs[0]
+L1055 PUSH regs[4]
+L1056 XOR regs[4] = regs[4] ^ 0xC97C50DD
+L1057 MOV regs[0] = regs[4]
+L1058 POP regs[4]
+L1059 PUSH regs[3]
+L1060 XOR regs[3] = regs[3] ^ 0xC0AC29B7
+L1061 MOV regs[1] = regs[3]
+L1062 POP regs[3]
+L1063 PrintR0R1 0
