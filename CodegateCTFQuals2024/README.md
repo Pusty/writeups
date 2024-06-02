@@ -344,7 +344,7 @@ We then translated the disassembled bytecode to C and are now working with the f
 - `void func_0516(uint32_t* regA, uint32_t* regB, uint32_t sboxOffset)` which applies an S-box on the nibbles, two S-boxes are used and they invert each other
 - `void func_0759(uint32_t* regA, uint32_t* regB, uint32_t flagC, uint32_t flagD)` the actual main function
 
-See [the simplified coce](vm_translated_simplified.c) for the actual simplified code (and for solving this challenge, unnecessary implementation of a decryption).
+See [the simplified code](vm_translated_simplified.c) for the actual simplified code (and for solving this challenge, unnecessary implementation of a decryption).
 
 Now what the encryptor program does is call `func_0759` with the first two arguments being random numbers and the later two being 2-dwords of the flag file.
 
