@@ -67,7 +67,7 @@ Note here that the first 16 bits of `y` are disgarded.
 Starting at the top we generate the number we encode into 8 bytes.
 This number consists out of different parts of `x` and `y` and can be expressed like this:
 
-![](img/encodeImg0.svg)
+![](img/encodeNum0.svg)
 
 
 ```python
@@ -80,7 +80,7 @@ nums[5] = tmp
 
 Then we 8x8 bit values out:
 
-![](img/encodeImg1.svg)
+![](img/encodeNum1.svg)
 
 ```python
 rdx_36 = ((nums[1]>>1) & 0x40) | ((nums[2]>>2) & 0x20) | ((nums[3]>>3) & 0x10) | ((nums[4]>>4) & 8) | ((nums[5]>>5) & 4) | ((nums[6]>>6) & 2) | ((nums[7]>>7) & 1)
@@ -96,7 +96,7 @@ res = (rax_245 | rax_245_2)
 
 Then we split the 8x8 bit blocks into 9x7 bit blocks (+ one):
 
-![](img/encodeImg2.svg)
+![](img/encodeNum2.svg)
 
 From this we can see how the bits are shuffeled and just extract them directly:
 
