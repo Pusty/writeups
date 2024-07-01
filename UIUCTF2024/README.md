@@ -12,10 +12,11 @@ From the verification arrays the maximum seems to be 335 points.
 
 ![](img/encode.png)
 
-The code takes the x and y coordinates in for each iteration and encodes them into 8 bytes.
-These 8 bytes are xored in 16-bit pairs together and checked if the hash of their hamming weight matches an stored value for the index.
+The code takes the x and y coordinates as input for each iteration and encodes them into 8 bytes.
+These 8 bytes are xored together in 16-bit pairs and checked if the hash of their hamming weight matches a stored value at the iteration index.
+
 If all points pass this check then they are encoded further and checked against a `correct` array.
-After all points pass this check as well we get `You have reached your destination. PWNYMAPS does not support route plotting yet.` back from the binary.
+After all points pass this check as well, we get `You have reached your destination. PWNYMAPS does not support route plotting yet.` back from the binary.
 
 
 ```python
@@ -78,7 +79,7 @@ nums[1] = nums[5]
 nums[5] = tmp
 ```
 
-Then we 8x8 bit values out:
+Then we extract 8x8 bit values out:
 
 ![](img/encodeNum1.svg)
 
@@ -122,15 +123,12 @@ for entry in correct:
     print(x, y)
 ```
 
-This also gives us valid input for the binary and coordinates to plot for the flag.
-
-
 
 Plotting these points gives us this pretty hard to read mess:
 
 ![](img/lines.png)
 
-A bit of manual cleaning up:
+After cleaning up some unlikely and long lines manually:
 
 ![](img/cleaned.png)
 
