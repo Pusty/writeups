@@ -354,8 +354,7 @@ Running the script `painting_solve.py` will give the correct input sequence of:
 
 Running the ms_paint binary and opening a (text) file with this content makes the binary create a `out_flag.jpg` with the flag:
 
-!()[img/painting.png]
-
+![](img/painting.png)
 
 So the flag is `maltactf{one_sweep_later...look_at_all_these_beautiful_flowers}`.
 
